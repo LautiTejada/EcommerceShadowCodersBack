@@ -2,6 +2,7 @@ package com.dresscode.api_dresscode.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 
 public class Descuento extends Base{
     @Column(nullable = false, name = "fecha-inicio")
@@ -26,5 +28,6 @@ public class Descuento extends Base{
     private Integer porcentajeDescuento;
 
     @OneToMany(mappedBy = "descuento", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<DescuentoProducto> productos = new ArrayList<>();
 }

@@ -2,6 +2,7 @@ package com.dresscode.api_dresscode.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,11 +14,13 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 
 public class Talle extends Base{
     @Column(name = "tipo-talle", nullable = false)
     private String tipoTalle;  // Ej: "S", "M", "L", "XL"
 
     @OneToMany(mappedBy = "talle", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<ProductoTalle> productos = new ArrayList<>();
 }
