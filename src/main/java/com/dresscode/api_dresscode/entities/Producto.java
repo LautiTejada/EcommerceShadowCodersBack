@@ -49,5 +49,9 @@ public class Producto extends Base{
     @Builder.Default
     private List<ProductoTalle> talles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ImagenProducto> imagenes = new ArrayList<>();
+
 
 }
