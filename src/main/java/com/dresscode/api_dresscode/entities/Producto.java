@@ -2,6 +2,7 @@ package com.dresscode.api_dresscode.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 
 public class Producto extends Base{
 
@@ -23,7 +25,7 @@ public class Producto extends Base{
     private Double precio;
 
     @Column(name = "cantidad", nullable = false)
-    private int cantidad;
+    private Integer cantidad;
 
     @Column(name = "descripcion", nullable = false)
     private String descripcion;
@@ -39,10 +41,12 @@ public class Producto extends Base{
     private Categoria categoria;
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<DescuentoProducto> descuentos = new ArrayList<>();
 
     // Relación ManyToMany con Talle (tabla intermedia Calle-producto)
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<ProductoTalle> talles = new ArrayList<>();
 
 
