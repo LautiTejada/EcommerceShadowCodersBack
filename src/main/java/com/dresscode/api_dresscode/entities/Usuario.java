@@ -16,6 +16,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 
+
+
 public class Usuario extends Base{
 
     @Column(nullable = false, name = "nombre-usuario", length = 100)
@@ -29,7 +31,7 @@ public class Usuario extends Base{
 
     @Column(nullable = false, name = "rol")
     @Builder.Default
-    private boolean rol;
+    private boolean rol = false;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
