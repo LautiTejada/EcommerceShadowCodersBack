@@ -43,7 +43,7 @@ public class OrdenDeCompra extends Base{
     @Column(name = "estado", nullable = false)
     private EstadoOrden estadoOrden;
 
-    @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<DetalleOrden> detalles = new ArrayList<>();
 

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class DetalleOrden extends Base{
 
     @ManyToOne
-    @JoinColumn(name = "id-orden-de-compra", nullable = false)
+    @JoinColumn(name = "orden_id", nullable = false)
     private OrdenDeCompra ordenDeCompra;
 
     @ManyToOne

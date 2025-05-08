@@ -22,5 +22,5 @@ public class Categoria extends Base{
 
     @ManyToOne
     @JoinColumn(name = "tipo_id", nullable = false)
-    private Tipo Tipo;
+    private Tipo tipo;
 }
