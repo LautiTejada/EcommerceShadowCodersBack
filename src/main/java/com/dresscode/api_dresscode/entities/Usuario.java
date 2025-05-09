@@ -26,7 +26,7 @@ public class Usuario extends Base{
     @Column(nullable = false, name = "email", unique = true, length = 50)
     private String email;
 
-    @Column(nullable = false, name = "contrasena", length = 100)
+    @Column(nullable = false, name = "contrasena", length = 50)
     private String contrasena;
 
     @Column(nullable = false, name = "rol")
