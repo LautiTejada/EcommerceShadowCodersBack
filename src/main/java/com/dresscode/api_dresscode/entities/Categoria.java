@@ -23,4 +23,9 @@ public class Categoria extends Base{
     @ManyToOne
     @JoinColumn(name = "tipo_id", nullable = false)
     private Tipo tipo;
+
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Producto> productos = new ArrayList<>();
+
 }
