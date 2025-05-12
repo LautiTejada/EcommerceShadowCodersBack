@@ -38,7 +38,6 @@ public class DireccionService {
         UsuarioDireccion usuarioDireccion = UsuarioDireccion.builder()
                 .usuario(usuario)
                 .direccion(direccionGuardada)
-                .tipoDireccion(tipoDireccion)
                 .build();
 
         usuarioDireccionRepository.save(usuarioDireccion);

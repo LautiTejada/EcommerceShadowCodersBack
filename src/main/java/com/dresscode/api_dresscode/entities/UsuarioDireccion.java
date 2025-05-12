@@ -23,7 +23,5 @@ public class UsuarioDireccion extends Base{
     @JoinColumn(name = "id-direccion", nullable = false)
     private Direccion direccion;
 
-    @Column(name = "tipo", length = 20)
-    private String tipoDireccion;
 
 }

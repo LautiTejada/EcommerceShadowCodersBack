@@ -54,7 +54,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioDireccion crearDireccionYAsignarAUsuario(Long usuarioId, Direccion direccion, String tipoDireccion) {
+    public UsuarioDireccion crearDireccionYAsignarAUsuario(Long usuarioId, Direccion direccion) {
         Usuario usuario = getUsuarioById(usuarioId);
 
         Direccion nuevaDireccion = direccionRepository.save(direccion);
@@ -62,7 +62,6 @@ public class UsuarioService {
         UsuarioDireccion usuarioDireccion = UsuarioDireccion.builder()
                 .usuario(usuario)
                 .direccion(nuevaDireccion)
-                .tipoDireccion(tipoDireccion)
                 .build();
 
         UsuarioDireccion guardada = usuarioDireccionRepository.save(usuarioDireccion);
@@ -72,5 +71,14 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
 
         return guardada;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Direccion> obtenerDireccionesDeUsuario(Long usuarioId) {
+        Usuario usuario = getUsuarioById(usuarioId);
+
+        return usuario.getDirecciones().stream()
+                .map(UsuarioDireccion::getDireccion)
+                .toList();
     }
 }
