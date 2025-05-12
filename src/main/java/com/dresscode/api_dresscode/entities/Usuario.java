@@ -1,5 +1,6 @@
 package com.dresscode.api_dresscode.entities;
 
+import com.dresscode.api_dresscode.entities.enums.Rol;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +32,7 @@ public class Usuario extends Base{
 
     @Column(nullable = false, name = "rol")
     @Builder.Default
-    private boolean rol = false;
+    private Rol rol = Rol.USER;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

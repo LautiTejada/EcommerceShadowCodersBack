@@ -49,9 +49,4 @@ public class CategoriaService {
         categoriaRepository.delete(categoriaEliminada);
     }
 
-    public List<Producto> getProductosByCategoria(Long categoriaId) {
-        Categoria categoria = getCategoriaById(categoriaId); // Para validar existencia
-        return productoRepository.findByCategoriaId(categoriaId);
-    }
-
 }
