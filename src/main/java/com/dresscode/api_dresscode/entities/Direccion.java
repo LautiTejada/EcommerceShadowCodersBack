@@ -39,6 +39,7 @@ public class Direccion extends Base{
     private Provincias provincia;
 
     @Column(name = "pais", nullable = false)
+    @Builder.Default
     private String pais = "Argentina";
 
 

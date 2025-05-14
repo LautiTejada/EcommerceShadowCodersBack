@@ -16,7 +16,7 @@ import java.util.List;
 
 public class TalleController {
 
-    private TalleService talleService;
+    private final TalleService talleService;
 
     @GetMapping
     public ResponseEntity<List<Talle>> obtenerTodosLosTalles() {
@@ -24,7 +24,7 @@ public class TalleController {
         return ResponseEntity.ok(talles);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{talleId}")
     public ResponseEntity<Talle> obtenerTallePorId(@PathVariable Long talleId) {
         Talle talle = talleService.getTalleById(talleId);
         return  ResponseEntity.ok(talle);
@@ -36,13 +36,13 @@ public class TalleController {
         return ResponseEntity.status(201).body(nuevoTalle);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{talleId}")
     public ResponseEntity<Talle> editarTalle(@PathVariable Long talleId, @Valid @RequestBody Talle talle){
         Talle talleEditado = talleService.updateTalle(talleId, talle);
         return ResponseEntity.ok(talleEditado);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{talleId}")
     public ResponseEntity<Talle> eliminarTalle(@PathVariable Long talleId){
         talleService.deleteTalle(talleId);
         return ResponseEntity.noContent().build();
