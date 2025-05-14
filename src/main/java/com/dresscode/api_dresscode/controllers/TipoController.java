@@ -17,7 +17,7 @@ import java.util.List;
 
 public class TipoController {
 
-    private TipoService tipoService;
+    private final TipoService tipoService;
 
     @GetMapping
     public ResponseEntity<List<Tipo>> obtenerTodosLosTipos() {
@@ -25,7 +25,7 @@ public class TipoController {
         return ResponseEntity.ok(tipos);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{tipoId}")
     public ResponseEntity<Tipo> obtenerTipoPorId(@PathVariable Long tipoId) {
         Tipo tipo = tipoService.getTipoById(tipoId);
         return ResponseEntity.ok(tipo);
@@ -37,13 +37,13 @@ public class TipoController {
         return ResponseEntity.status(201).body(nuevoTipo);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{tipoId}")
     public ResponseEntity<Tipo> editarTipo(@PathVariable Long tipoId,@Valid @RequestBody Tipo tipo ){
         Tipo tipoEditado = tipoService.updateTipo(tipoId, tipo);
         return ResponseEntity.ok(tipoEditado);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{tipoId}")
     public ResponseEntity<Tipo> eliminarTipoPorId(@PathVariable Long tipoId){
         tipoService.deleteTipo(tipoId);
         return  ResponseEntity.noContent().build();

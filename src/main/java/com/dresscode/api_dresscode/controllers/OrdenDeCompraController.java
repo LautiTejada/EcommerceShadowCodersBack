@@ -18,7 +18,7 @@ import java.util.List;
 
 public class OrdenDeCompraController {
 
-    private OrdenDeCompraService ordenDeCompraService;
+    private final OrdenDeCompraService ordenDeCompraService;
 
     @GetMapping
     public ResponseEntity<List<OrdenDeCompra>> obtenerTodasLasOrdenes(){
@@ -26,7 +26,7 @@ public class OrdenDeCompraController {
         return ResponseEntity.ok(ordenesDeCompra);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{ordenId}")
     public ResponseEntity<OrdenDeCompra> obtenerOrdenPorId(@PathVariable Long ordenId){
         OrdenDeCompra orden = ordenDeCompraService.getOrdenDeCompraById(ordenId);
         return ResponseEntity.ok(orden);
@@ -38,13 +38,13 @@ public class OrdenDeCompraController {
         return ResponseEntity.status(201).body(nuevaOrden);
     }
 
-    @PutMapping("/{id}/actualizar-estado")
+    @PutMapping("/{ordenId}/actualizar-estado")
     public ResponseEntity<OrdenDeCompra> actualizarEstadoOrden(@PathVariable Long ordenId, @RequestParam EstadoOrden estadoOrden){
         OrdenDeCompra ordenActualizada = ordenDeCompraService.actualizarEstadoOrden(ordenId, estadoOrden);
         return ResponseEntity.ok(ordenActualizada);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{ordenId}")
     public ResponseEntity<OrdenDeCompra> eliminarOrdenDeCompra(@PathVariable Long ordenId){
         ordenDeCompraService.eliminarOrden(ordenId);
         return ResponseEntity.noContent().build();

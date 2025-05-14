@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface DireccionRepository extends JpaRepository<Direccion, Long> {
-    @Query
+    @Query("SELECT ud.direccion FROM UsuarioDireccion ud WHERE ud.usuario.id = :usuarioId")
     List<Direccion> findDireccionesByUsuarioId(@Param("usuarioId") Long usuarioId);
 }

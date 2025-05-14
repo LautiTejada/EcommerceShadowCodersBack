@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ProductoController {
 
-    private ProductoService productoService;
+    private final ProductoService productoService;
 
     @GetMapping
     public ResponseEntity<List<Producto>> obtenerTodosLosProductos(){
@@ -24,7 +24,7 @@ public class ProductoController {
         return ResponseEntity.ok(productos);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{productoId}")
     public ResponseEntity<Producto> obtenerProductoPorId(@PathVariable Long productoId){
         Producto producto = productoService.getProductoById(productoId);
         return ResponseEntity.ok(producto);
@@ -37,19 +37,19 @@ public class ProductoController {
         return ResponseEntity.status(201).body(nuevoProducto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{productoId}")
     public ResponseEntity<Producto> editarProducto(@PathVariable Long productoId, @Valid @RequestBody Producto producto){
         Producto nuevoProducto = productoService.updateProducto(productoId, producto);
         return ResponseEntity.ok(nuevoProducto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{productoId}")
     public ResponseEntity<Producto> eliminarProducto(@PathVariable Long productoId){
         productoService.deleteProducto(productoId);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/cambiar-etado")
+    @PutMapping("/{productoId}/cambiar-etado")
     public ResponseEntity<Producto> cambiarEstadoProducto(@PathVariable Long productoId, @RequestParam Boolean nuevoEstado){
         Producto productoActualizado = productoService.cambiarEstadoProducto(productoId, nuevoEstado);
         return ResponseEntity.ok(productoActualizado);
