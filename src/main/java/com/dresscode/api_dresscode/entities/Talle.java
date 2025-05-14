@@ -18,7 +18,7 @@ import java.util.List;
 
 public class Talle extends Base{
     @Column(name = "tipo-talle", nullable = false)
-    private String tipoTalle;  // Ej: "S", "M", "L", "XL"
+    private String tipoTalle;
 
     @OneToMany(mappedBy = "talle", cascade = CascadeType.ALL)
     @Builder.Default

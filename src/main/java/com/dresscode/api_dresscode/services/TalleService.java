@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 
 public class TalleService {
-    private TalleRepository talleRepository;
+    private final TalleRepository talleRepository;
     private final ProductoRepository productoRepository;
     private final ProductoTalleRepository productoTalleRepository;
 
