@@ -48,13 +48,13 @@ public class TalleController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{talleId}/producto/{productoId}")
+    @PostMapping("/{talleId}/productos/{productoId}")
     public ResponseEntity<String> asignarTalleAProducto (@RequestParam  Long talleId, @RequestParam Long productoId){
         talleService.asignarTalleAProducto(productoId, talleId);
         return ResponseEntity.ok("Talle asignado "+ talleId+", al producto: "+ productoId);
     }
 
-    @DeleteMapping("/{talleId}/producto/{productoId}")
+    @DeleteMapping("/{talleId}/productos/{productoId}")
     public ResponseEntity<Talle> eliminarTalleDeProducto(@PathVariable Long productoId, @PathVariable Long talleId){
         talleService.eliminarTalleDeProducto(productoId, talleId);
         return ResponseEntity.noContent().build();
