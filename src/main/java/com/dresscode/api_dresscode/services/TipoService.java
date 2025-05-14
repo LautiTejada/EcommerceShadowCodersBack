@@ -19,23 +19,23 @@ public class TipoService {
 
     private final CategoriaRepository categoriaRepository;
 
-    // Traer todos los tipos
+
     public List<Tipo> getAllTipos() {
         return tipoRepository.findAll();
     }
 
-    // Traer un tipo por su ID
+
     public Tipo getTipoById(Long id) {
         return tipoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tipo no encontrado con id: " + id));
     }
 
-    // Crear un nuevo tipo
+
     public Tipo createTipo(Tipo tipo) {
         return tipoRepository.save(tipo);
     }
 
-    // Actualizar un tipo existente
+
     @Transactional
     public Tipo updateTipo(Long id, Tipo tipoActualizado) {
         Tipo tipoExistente = getTipoById(id);
@@ -43,7 +43,7 @@ public class TipoService {
         return tipoRepository.save(tipoExistente);
     }
 
-    // Eliminar un tipo, validando que no tenga categorías asociadas
+
     @Transactional
     public void deleteTipo(Long id) {
         Tipo tipoExistente = getTipoById(id);

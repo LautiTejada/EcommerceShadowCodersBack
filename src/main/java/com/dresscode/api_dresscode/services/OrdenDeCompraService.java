@@ -48,6 +48,8 @@ public class OrdenDeCompraService {
         return ordenDeCompraRepository.save(ordenDeCompra);
     }
 
+
+
     @Transactional
     public OrdenDeCompra actualizarEstadoOrden(Long ordenId, EstadoOrden nuevoEstado) {
         OrdenDeCompra orden = getOrdenDeCompraById(ordenId);
