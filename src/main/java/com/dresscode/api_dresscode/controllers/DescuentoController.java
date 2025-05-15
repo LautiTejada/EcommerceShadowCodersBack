@@ -42,13 +42,13 @@ public class DescuentoController {
     }
 
     @DeleteMapping("/{descuentoId}")
-    public ResponseEntity<Void> eliminarDescuento(@PathVariable Long descuentoId){
+    public ResponseEntity<Descuento> eliminarDescuento(@PathVariable Long descuentoId){
         descuentoService.deleteDescuento(descuentoId);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{descuentoId}/productos/{idProducto}")
-    public ResponseEntity<Void> agregarProductoADescuento(@PathVariable Long descuentoId, @PathVariable Long idProducto){
+    public ResponseEntity<Descuento> agregarProductoADescuento(@PathVariable Long descuentoId, @PathVariable Long idProducto){
        descuentoService.agregarProductoADescuento(descuentoId, idProducto);
         return ResponseEntity.ok().build();
     }

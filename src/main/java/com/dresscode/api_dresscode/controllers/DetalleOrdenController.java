@@ -50,7 +50,7 @@ public class DetalleOrdenController {
     }
 
     @DeleteMapping("/{detalleId}")
-    public  ResponseEntity<Void> eliminarDetalleDeOrden(@PathVariable Long detalleId){
+    public  ResponseEntity<DetalleOrden> eliminarDetalleDeOrden(@PathVariable Long detalleId){
         detalleOrdenService.eliminarDetalleDeOrden(detalleId);
         return ResponseEntity.noContent().build();
     }
