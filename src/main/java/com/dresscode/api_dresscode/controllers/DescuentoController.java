@@ -24,8 +24,8 @@ public class DescuentoController {
     }
 
     @GetMapping("/{descuentoId}")
-    public ResponseEntity<Descuento> obtenerDescuentoPorId (@PathVariable Long id){
-        Descuento descuento = descuentoService.getDescuentoById(id);
+    public ResponseEntity<Descuento> obtenerDescuentoPorId (@PathVariable Long descuentoId){
+        Descuento descuento = descuentoService.getDescuentoById(descuentoId);
         return ResponseEntity.ok(descuento);
     }
 
@@ -36,26 +36,26 @@ public class DescuentoController {
     }
 
     @PutMapping("/{descuentoId}")
-    public ResponseEntity<Descuento> actualizarDescuento(@PathVariable Long id, @RequestBody Descuento descuento){
-        Descuento descuentoActualizado = descuentoService.editarDescuento(id, descuento);
+    public ResponseEntity<Descuento> actualizarDescuento(@PathVariable Long descuentoId, @RequestBody Descuento descuento){
+        Descuento descuentoActualizado = descuentoService.editarDescuento(descuentoId, descuento);
         return ResponseEntity.ok(descuentoActualizado);
     }
 
     @DeleteMapping("/{descuentoId}")
-    public ResponseEntity<Void> eliminarDescuento(@PathVariable Long id){
-        descuentoService.deleteDescuento(id);
+    public ResponseEntity<Void> eliminarDescuento(@PathVariable Long descuentoId){
+        descuentoService.deleteDescuento(descuentoId);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{descuentoId}/productos/{idProducto}")
-    public ResponseEntity<Void> agregarProductoADescuento(@PathVariable Long idDescuento, @PathVariable Long idProducto){
-       descuentoService.agregarProductoADescuento(idDescuento, idProducto);
+    public ResponseEntity<Void> agregarProductoADescuento(@PathVariable Long descuentoId, @PathVariable Long idProducto){
+       descuentoService.agregarProductoADescuento(descuentoId, idProducto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{descuentoId}/productos/{idProducto}")
-    public ResponseEntity<Void> eliminarProductoDeDescuento(@PathVariable Long idDescuento, @PathVariable Long idProducto){
-        descuentoService.eliminarProductoDeDescuento(idDescuento, idProducto);
+    public ResponseEntity<Void> eliminarProductoDeDescuento(@PathVariable Long descuentoId, @PathVariable Long idProducto){
+        descuentoService.eliminarProductoDeDescuento(descuentoId, idProducto);
         return ResponseEntity.noContent().build();
     }
 }

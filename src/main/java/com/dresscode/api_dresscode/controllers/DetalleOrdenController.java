@@ -23,9 +23,9 @@ public class DetalleOrdenController {
 
     }
 
-    @GetMapping("{/{detalleId}")
-    public ResponseEntity<DetalleOrden> obtenerDetallesPorId(@PathVariable Long id){
-        DetalleOrden detalle = detalleOrdenService.getDetalleById(id);
+    @GetMapping("/{detalleId}")
+    public ResponseEntity<DetalleOrden> obtenerDetallesPorId(@PathVariable Long detalleId){
+        DetalleOrden detalle = detalleOrdenService.getDetalleById(detalleId);
         return ResponseEntity.ok(detalle);
     }
 
@@ -44,14 +44,14 @@ public class DetalleOrdenController {
     }
 
     @PutMapping("/{detalleId}")
-    public ResponseEntity<DetalleOrden> actualizarDetallerOrden(@PathVariable Long id, @RequestParam Integer nuevaCantidad){
-        DetalleOrden detalleActualizado = detalleOrdenService.actualizarDetalleOrden(id,nuevaCantidad);
+    public ResponseEntity<DetalleOrden> actualizarDetallerOrden(@PathVariable Long detalleId, @RequestParam Integer nuevaCantidad){
+        DetalleOrden detalleActualizado = detalleOrdenService.actualizarDetalleOrden(detalleId,nuevaCantidad);
         return ResponseEntity.status(201).body(detalleActualizado);
     }
 
     @DeleteMapping("/{detalleId}")
-    public  ResponseEntity<Void> eliminarDetalleDeOrden(@PathVariable Long id){
-        detalleOrdenService.eliminarDetalleDeOrden(id);
+    public  ResponseEntity<Void> eliminarDetalleDeOrden(@PathVariable Long detalleId){
+        detalleOrdenService.eliminarDetalleDeOrden(detalleId);
         return ResponseEntity.noContent().build();
     }
 }

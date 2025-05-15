@@ -16,9 +16,9 @@ public class DireccionController {
  private final DireccionService direccionService;
 
  @GetMapping("/{direccionId}")
- public ResponseEntity<?> obtenerDireccionPorId(@PathVariable Long id) {
+ public ResponseEntity<?> obtenerDireccionPorId(@PathVariable Long direccionId) {
      try {
-         Direccion direccion = direccionService.getDireccionById(id);
+         Direccion direccion = direccionService.getDireccionById(direccionId);
          return ResponseEntity.ok(direccion);
      } catch (RuntimeException e) {
          return ResponseEntity.badRequest().body(e.getMessage());
@@ -40,10 +40,10 @@ public class DireccionController {
 
     @PutMapping("/{direccionId}")
     public ResponseEntity<?> editarDireccion(
-            @PathVariable Long id,
+            @PathVariable Long direccionId,
             @RequestBody Direccion datosActualizados) {
         try {
-            Direccion direccionActualizada = direccionService.editarDireccion(id, datosActualizados);
+            Direccion direccionActualizada = direccionService.editarDireccion(direccionId, datosActualizados);
             return ResponseEntity.ok(direccionActualizada);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -51,9 +51,9 @@ public class DireccionController {
     }
 
     @DeleteMapping("/{direccionId}")
-    public ResponseEntity<?> eliminarDireccion(@PathVariable Long id) {
+    public ResponseEntity<?> eliminarDireccion(@PathVariable Long direccionId) {
         try {
-            direccionService.eliminarDireccion(id);
+            direccionService.eliminarDireccion(direccionId);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

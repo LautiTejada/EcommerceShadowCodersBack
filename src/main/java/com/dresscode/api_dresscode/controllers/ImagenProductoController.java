@@ -25,9 +25,9 @@ public class ImagenProductoController {
     }
 
     @GetMapping("/{imagenId}")
-    public ResponseEntity<?> getImagenById(@PathVariable Long id) {
+    public ResponseEntity<?> getImagenById(@PathVariable Long imagenId) {
         try {
-            ImagenProducto imagen = imagenProductoService.getImagenById(id);
+            ImagenProducto imagen = imagenProductoService.getImagenById(imagenId);
             return ResponseEntity.ok(imagen);
         } catch (Exception e) {
             return ResponseEntity.status(404).body(e.getMessage());
@@ -55,9 +55,9 @@ public class ImagenProductoController {
     }
 
     @PutMapping("/{imagenId}")
-    public ResponseEntity<?> updateImagen(@PathVariable Long id, @RequestBody ImagenProducto imagenActualizada) {
+    public ResponseEntity<?> updateImagen(@PathVariable Long imagenId, @RequestBody ImagenProducto imagenActualizada) {
         try {
-            ImagenProducto imagen = imagenProductoService.updateImagen(id, imagenActualizada);
+            ImagenProducto imagen = imagenProductoService.updateImagen(imagenId, imagenActualizada);
             return ResponseEntity.ok(imagen);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -65,9 +65,9 @@ public class ImagenProductoController {
     }
 
     @DeleteMapping("/{imagenId}")
-    public ResponseEntity<?> deleteImagen(@PathVariable Long id) {
+    public ResponseEntity<?> deleteImagen(@PathVariable Long imagenId) {
         try {
-            imagenProductoService.deleteImagen(id);
+            imagenProductoService.deleteImagen(imagenId);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(404).body(e.getMessage());
