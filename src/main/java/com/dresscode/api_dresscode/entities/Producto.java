@@ -2,6 +2,7 @@ package com.dresscode.api_dresscode.entities;
 
 import com.dresscode.api_dresscode.entities.enums.Color;
 import com.dresscode.api_dresscode.entities.enums.Marca;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -50,13 +51,13 @@ public class Producto extends Base{
 
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)
+    @JsonBackReference
     private Categoria categoria;
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<DescuentoProducto> descuentos = new ArrayList<>();
 
-    // Relación ManyToMany con Talle (tabla intermedia Calle-producto)
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<ProductoTalle> talles = new ArrayList<>();
