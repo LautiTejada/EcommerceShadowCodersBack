@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "calle-producto")  // Nombre según tu UML
+@Table(name = "talle-producto")  // Nombre según tu UML
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
