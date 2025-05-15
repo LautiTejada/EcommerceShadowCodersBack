@@ -22,7 +22,7 @@ public class CategoriaController {
         return ResponseEntity.ok(categorias);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{categoriaId}")
     public ResponseEntity<Categoria> obtenerCategoriaPorId(@PathVariable Long id){
         Categoria categoria = categoriaService.getCategoriaById(id);
         return ResponseEntity.ok(categoria);
@@ -35,13 +35,13 @@ public class CategoriaController {
 
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{categoriaId}")
     public ResponseEntity<Categoria> actualizarCategoria(@PathVariable Long id, @RequestBody Categoria categoria){
         Categoria categoriaActualizada = categoriaService.updateCategoria(id, categoria);
         return ResponseEntity.ok(categoriaActualizada);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{categoriaId}")
     public  ResponseEntity<Void> eliminarCategoria(@PathVariable Long id){
         categoriaService.deleteCategoria(id);
         return ResponseEntity.noContent().build();

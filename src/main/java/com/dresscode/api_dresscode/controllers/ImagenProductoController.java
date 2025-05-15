@@ -24,7 +24,7 @@ public class ImagenProductoController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{imagenId}")
     public ResponseEntity<?> getImagenById(@PathVariable Long id) {
         try {
             ImagenProducto imagen = imagenProductoService.getImagenById(id);
@@ -54,7 +54,7 @@ public class ImagenProductoController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{imagenId}")
     public ResponseEntity<?> updateImagen(@PathVariable Long id, @RequestBody ImagenProducto imagenActualizada) {
         try {
             ImagenProducto imagen = imagenProductoService.updateImagen(id, imagenActualizada);
@@ -64,7 +64,7 @@ public class ImagenProductoController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{imagenId}")
     public ResponseEntity<?> deleteImagen(@PathVariable Long id) {
         try {
             imagenProductoService.deleteImagen(id);

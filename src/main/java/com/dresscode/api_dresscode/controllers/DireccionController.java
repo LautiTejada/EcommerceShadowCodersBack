@@ -15,7 +15,7 @@ import java.util.List;
 public class DireccionController {
  private final DireccionService direccionService;
 
- @GetMapping("/{id}")
+ @GetMapping("/{direccionId}")
  public ResponseEntity<?> obtenerDireccionPorId(@PathVariable Long id) {
      try {
          Direccion direccion = direccionService.getDireccionById(id);
@@ -38,7 +38,7 @@ public class DireccionController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{direccionId}")
     public ResponseEntity<?> editarDireccion(
             @PathVariable Long id,
             @RequestBody Direccion datosActualizados) {
@@ -50,7 +50,7 @@ public class DireccionController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{direccionId}")
     public ResponseEntity<?> eliminarDireccion(@PathVariable Long id) {
         try {
             direccionService.eliminarDireccion(id);
