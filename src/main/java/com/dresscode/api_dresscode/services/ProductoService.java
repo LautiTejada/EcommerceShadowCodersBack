@@ -41,7 +41,6 @@ public class ProductoService {
 
         productoExistente.setNombre(productoActualizado.getNombre());
         productoExistente.setPrecio(productoActualizado.getPrecio());
-        productoExistente.setCantidad(productoActualizado.getCantidad());
         productoExistente.setDescripcion(productoActualizado.getDescripcion());
         productoExistente.setColor(productoActualizado.getColor());
         productoExistente.setMarca(productoActualizado.getMarca());

@@ -4,6 +4,7 @@ import com.dresscode.api_dresscode.entities.enums.Color;
 import com.dresscode.api_dresscode.entities.enums.Marca;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -34,9 +35,6 @@ public class Producto extends Base{
     @Positive
     private Double precio;
 
-    @Column(name = "cantidad", nullable = false)
-    private Integer cantidad;
-
     @Column(name = "descripcion", nullable = false)
     private String descripcion;
 
@@ -60,9 +58,9 @@ public class Producto extends Base{
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @JsonManagedReference
     private List<ProductoTalle> talles = new ArrayList<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<ImagenProducto> imagenes = new ArrayList<>();
