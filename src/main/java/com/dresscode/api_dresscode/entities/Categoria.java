@@ -1,5 +1,6 @@
 package com.dresscode.api_dresscode.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ public class Categoria extends Base{
 
     @ManyToOne
     @JoinColumn(name = "tipo_id", nullable = false)
+    @JsonBackReference
     private Tipo tipo;
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)

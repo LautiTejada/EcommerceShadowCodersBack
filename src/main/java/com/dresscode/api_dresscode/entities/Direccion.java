@@ -1,6 +1,8 @@
 package com.dresscode.api_dresscode.entities;
 
 import com.dresscode.api_dresscode.entities.enums.Provincias;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -43,7 +45,9 @@ public class Direccion extends Base{
     private String pais = "Argentina";
 
 
-    @OneToMany(mappedBy = "direccion", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private Set<UsuarioDireccion> usuarios = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    @JsonBackReference
+    private Usuario usuario;
+
 }

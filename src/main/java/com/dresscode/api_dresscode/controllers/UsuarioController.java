@@ -2,7 +2,6 @@ package com.dresscode.api_dresscode.controllers;
 
 import com.dresscode.api_dresscode.entities.Direccion;
 import com.dresscode.api_dresscode.entities.Usuario;
-import com.dresscode.api_dresscode.entities.UsuarioDireccion;
 import com.dresscode.api_dresscode.services.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -51,11 +50,12 @@ public class UsuarioController {
     }
 
     @PostMapping("/{usuarioId}/direcciones")
-    public ResponseEntity<UsuarioDireccion> crearDireccionYAsignarAUsuario(
+    public ResponseEntity<Direccion> crearDireccionYAsignarAUsuario(
             @PathVariable Long usuarioId,
             @Valid @RequestBody Direccion direccion) {
-        UsuarioDireccion usuarioDireccion = usuarioService.crearDireccionYAsignarAUsuario(usuarioId, direccion);
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDireccion);
+
+        Direccion nuevaDireccion = usuarioService.crearDireccionYAsignarAUsuario(usuarioId, direccion);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaDireccion);
     }
 
     @GetMapping("/{usuarioId}/direcciones")
@@ -63,5 +63,18 @@ public class UsuarioController {
         List<Direccion> direcciones = usuarioService.obtenerDireccionesDeUsuario(usuarioId);
         return ResponseEntity.ok(direcciones);
     }
+
+    @PutMapping("/{usuarioId}/direcciones/{direccionId}")
+    public ResponseEntity<Direccion> editarDireccionDeUsuario(
+            @PathVariable Long usuarioId,
+            @PathVariable Long direccionId,
+            @Valid @RequestBody Direccion direccionActualizada) {
+
+        Direccion direccionEditada = usuarioService.editarDireccionDeUsuario(usuarioId, direccionId, direccionActualizada);
+        return ResponseEntity.ok(direccionEditada);
+    }
+
+
+
 
 }

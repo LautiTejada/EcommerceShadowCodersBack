@@ -2,9 +2,7 @@ package com.dresscode.api_dresscode.services;
 
 import com.dresscode.api_dresscode.entities.Direccion;
 import com.dresscode.api_dresscode.entities.Usuario;
-import com.dresscode.api_dresscode.entities.UsuarioDireccion;
 import com.dresscode.api_dresscode.repositories.DireccionRepository;
-import com.dresscode.api_dresscode.repositories.UsuarioDireccionRepository;
 import com.dresscode.api_dresscode.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,8 +16,8 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
-    private final UsuarioDireccionRepository usuarioDireccionRepository;
     private final DireccionRepository direccionRepository;
+    private final DireccionService direccionService;
 
     public List<Usuario> gertAllUsuarios() {
         return usuarioRepository.findAll();
@@ -53,32 +51,40 @@ public class UsuarioService {
         usuarioRepository.delete(usuarioEliminado);
     }
 
-    @Transactional
-    public UsuarioDireccion crearDireccionYAsignarAUsuario(Long usuarioId, Direccion direccion) {
+    public List<Direccion> obtenerDireccionesDeUsuario(Long usuarioId) {
         Usuario usuario = getUsuarioById(usuarioId);
+        return usuario.getDirecciones();
+    }
+
+
+    @Transactional
+    public Direccion crearDireccionYAsignarAUsuario(Long usuarioId, Direccion direccion) {
+
+        Usuario usuario = getUsuarioById(usuarioId);
+
+        direccion.setUsuario(usuario);
 
         Direccion nuevaDireccion = direccionRepository.save(direccion);
 
-        UsuarioDireccion usuarioDireccion = UsuarioDireccion.builder()
-                .usuario(usuario)
-                .direccion(nuevaDireccion)
-                .build();
-
-        UsuarioDireccion guardada = usuarioDireccionRepository.save(usuarioDireccion);
-
-
-        usuario.getDirecciones().add(guardada);
+        usuario.getDirecciones().add(nuevaDireccion);
         usuarioRepository.save(usuario);
 
-        return guardada;
+        return nuevaDireccion;
     }
 
-    @Transactional(readOnly = true)
-    public List<Direccion> obtenerDireccionesDeUsuario(Long usuarioId) {
+    @Transactional
+    public Direccion editarDireccionDeUsuario(Long usuarioId, Long direccionId, Direccion direccionActualizada) {
         Usuario usuario = getUsuarioById(usuarioId);
 
-        return usuario.getDirecciones().stream()
-                .map(UsuarioDireccion::getDireccion)
-                .toList();
+        Direccion direccion = direccionService.getDireccionById(direccionId);
+
+        direccion.setCalle(direccionActualizada.getCalle());
+        direccion.setNumero(direccionActualizada.getNumero());
+        direccion.setCodigoPostal(direccionActualizada.getCodigoPostal());
+        direccion.setLocalidad(direccionActualizada.getLocalidad());
+        direccion.setProvincia(direccionActualizada.getProvincia());
+
+        return direccionRepository.save(direccion);
     }
+
 }

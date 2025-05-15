@@ -1,5 +1,7 @@
 package com.dresscode.api_dresscode.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +24,6 @@ public class Tipo extends Base{
 
     @OneToMany(mappedBy = "tipo", cascade = CascadeType.ALL)
     @Builder.Default
+    @JsonManagedReference
     private List<Categoria> categorias = new ArrayList<>();
 }

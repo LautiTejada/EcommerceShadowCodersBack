@@ -15,58 +15,31 @@ import java.util.List;
 public class DireccionController {
  private final DireccionService direccionService;
 
- @GetMapping("/{direccionId}")
- public ResponseEntity<?> obtenerDireccionPorId(@PathVariable Long direccionId) {
-     try {
-         Direccion direccion = direccionService.getDireccionById(direccionId);
-         return ResponseEntity.ok(direccion);
-     } catch (RuntimeException e) {
-         return ResponseEntity.badRequest().body(e.getMessage());
-     }
- }
-
-    @PostMapping("/usuario/{usuarioId}")
-    public ResponseEntity<?> crearDireccion(
-            @PathVariable Long usuarioId,
-            @RequestBody Direccion direccion,
-            @RequestParam String tipoDireccion) {
-        try {
-            Direccion nuevaDireccion = direccionService.crearDireccion(usuarioId, direccion, tipoDireccion);
-            return ResponseEntity.ok(nuevaDireccion);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @GetMapping
+    public ResponseEntity<List<Direccion>> obtenerTodasLasDirecciones(){
+        List<Direccion> direcciones = direccionService.gertAllDirecciones();
+        return ResponseEntity.ok(direcciones);
     }
 
+     @GetMapping("/{direccionId}")
+     public ResponseEntity<Direccion> obtenerDireccionPorId(@PathVariable Long direccionId) {
+             Direccion direccion = direccionService.getDireccionById(direccionId);
+             return ResponseEntity.ok(direccion);
+     }
+
     @PutMapping("/{direccionId}")
-    public ResponseEntity<?> editarDireccion(
+    public ResponseEntity<Direccion> editarDireccion(
             @PathVariable Long direccionId,
             @RequestBody Direccion datosActualizados) {
-        try {
             Direccion direccionActualizada = direccionService.editarDireccion(direccionId, datosActualizados);
             return ResponseEntity.ok(direccionActualizada);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+
     }
 
     @DeleteMapping("/{direccionId}")
-    public ResponseEntity<?> eliminarDireccion(@PathVariable Long direccionId) {
-        try {
+    public ResponseEntity<Direccion> eliminarDireccion(@PathVariable Long direccionId) {
             direccionService.eliminarDireccion(direccionId);
             return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 
-    @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<?> obtenerDireccionesPorUsuario(@PathVariable Long usuarioId) {
-        try {
-            List<Direccion> direcciones = direccionService.getDireccionesByUsuario(usuarioId);
-            return ResponseEntity.ok(direcciones);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
     }
 }
