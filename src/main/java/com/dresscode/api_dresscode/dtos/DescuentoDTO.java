@@ -3,7 +3,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class DescuentoUpdateDTO {
+public class DescuentoDTO {
     private LocalDate fechaInicio;
     private LocalDate fechaCierre;
     private Integer porcentajeDescuento;

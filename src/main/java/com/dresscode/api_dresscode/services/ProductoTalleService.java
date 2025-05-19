@@ -20,6 +20,11 @@ public class ProductoTalleService {
     private final ProductoRepository productoRepository;
     private final TalleRepository talleRepository;
 
+    public ProductoTalle traerProductoTallePorId(Long productoTalleId) {
+        ProductoTalle productoTalle = productoTalleRepository.findById(productoTalleId)
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        return productoTalle;
+    }
 
     public ProductoTalle crearProductoTalle(Long productoId, Long talleId, Integer cantidad) {
         Producto producto = productoRepository.findById(productoId)

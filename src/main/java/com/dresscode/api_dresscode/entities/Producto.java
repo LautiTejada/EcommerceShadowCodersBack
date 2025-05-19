@@ -64,6 +64,7 @@ public class Producto extends Base{
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @JsonManagedReference
     private List<ImagenProducto> imagenes = new ArrayList<>();
 
 }

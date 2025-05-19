@@ -1,5 +1,7 @@
 package com.dresscode.api_dresscode.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,5 +25,6 @@ public class ImagenProducto extends Base {
 
     @ManyToOne
     @JoinColumn(name = "id-producto", nullable = false)
+    @JsonBackReference
     private Producto producto;
 }

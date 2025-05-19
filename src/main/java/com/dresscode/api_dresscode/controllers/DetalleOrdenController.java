@@ -29,12 +29,6 @@ public class DetalleOrdenController {
         return ResponseEntity.ok(detalle);
     }
 
-    @PostMapping("/orden/{ordenId}/producto/{productoId}")
-    public ResponseEntity<DetalleOrden> agregarDetalleAOrden(@PathVariable Long ordenId, @PathVariable Long productoId, @RequestBody DetalleOrden detalleOrden){
-        DetalleOrden nuevoDetalle = detalleOrdenService.agregarDetalleAOrden(ordenId,productoId, detalleOrden);
-        return ResponseEntity.status(201).body(nuevoDetalle);
-
-    }
 
     @GetMapping("/orden/{ordenId}")
     public ResponseEntity<List<DetalleOrden>> obtenerDetallesPorOrden(@PathVariable Long ordenId){

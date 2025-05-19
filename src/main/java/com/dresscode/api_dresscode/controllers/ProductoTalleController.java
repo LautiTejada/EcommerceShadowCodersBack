@@ -1,6 +1,6 @@
 package com.dresscode.api_dresscode.controllers;
 
-import com.dresscode.api_dresscode.dtos.ProductoTalleRequest;
+import com.dresscode.api_dresscode.dtos.ProductoTalleDTO;
 import com.dresscode.api_dresscode.entities.ProductoTalle;
 import com.dresscode.api_dresscode.services.ProductoTalleService;
 import jakarta.validation.Valid;
@@ -20,7 +20,7 @@ public class ProductoTalleController {
 
     @PostMapping
     public ResponseEntity<ProductoTalle> crearProductoTalle(
-            @Valid @RequestBody ProductoTalleRequest request
+            @Valid @RequestBody ProductoTalleDTO request
     ) {
         ProductoTalle nuevo = productoTalleService.crearProductoTalle(
                 request.getProductoId(),

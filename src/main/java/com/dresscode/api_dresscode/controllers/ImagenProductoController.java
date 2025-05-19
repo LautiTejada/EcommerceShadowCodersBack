@@ -1,7 +1,9 @@
 package com.dresscode.api_dresscode.controllers;
 
 import com.dresscode.api_dresscode.entities.ImagenProducto;
+import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.services.ImagenProductoService;
+import com.dresscode.api_dresscode.services.ProductoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImagenProductoController {
     private final ImagenProductoService imagenProductoService;
+    private final ProductoService productoService;
 
     @GetMapping
     public ResponseEntity<List<ImagenProducto>> getAllImagenes() {
@@ -30,12 +33,6 @@ public class ImagenProductoController {
     public ResponseEntity<List<ImagenProducto>> getImagenesByProductoId(@PathVariable Long productoId) {
         List<ImagenProducto> imagenes = imagenProductoService.getImagenesByProductoId(productoId);
         return ResponseEntity.ok(imagenes);
-    }
-
-    @PostMapping("/producto/{productoId}")
-    public ResponseEntity<ImagenProducto> createImagen(@PathVariable Long productoId, @RequestBody ImagenProducto imagenProducto) {
-        ImagenProducto nuevaImagen = imagenProductoService.createImagen(productoId, imagenProducto);
-        return ResponseEntity.ok(nuevaImagen);
     }
 
     @PutMapping("/{imagenId}")

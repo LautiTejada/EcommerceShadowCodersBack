@@ -30,5 +30,6 @@ public class ProductoTalle extends Base {
     @Column(nullable = false)
     @Positive
     @Max(100)
-    private Integer cantidad;
+    @Builder.Default
+    private Integer cantidad = 0;
 }

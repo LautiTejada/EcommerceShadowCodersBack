@@ -32,17 +32,6 @@ public class DetalleOrdenService {
                 .orElseThrow(() -> new RuntimeException("Detalle no encontrado con id: " + id));
     }
 
-    @Transactional
-    public DetalleOrden agregarDetalleAOrden(Long ordenId, Long productoId, DetalleOrden detalleOrden) {
-        OrdenDeCompra ordenDeCompra = ordenDeCompraService.getOrdenDeCompraById(ordenId);
-
-        Producto producto = productoService.getProductoById(productoId);
-
-        detalleOrden.setOrdenDeCompra(ordenDeCompra);
-        detalleOrden.setProducto(producto);
-        detalleOrden.setPrecioUnitario(producto.getPrecio());
-        return detalleOrdenRepository.save(detalleOrden);
-    }
 
     public List<DetalleOrden> obtenerDetallesPorOrden(Long ordenId) {
         return detalleOrdenRepository.findByOrdenDeCompraId(ordenId);
@@ -65,7 +54,9 @@ public class DetalleOrdenService {
         }
 
         detalleOrden.setCantidad(nuevaCantidad);
-        detalleOrden.setPrecioUnitario(detalleOrden.getProducto().getPrecio() * nuevaCantidad);
+        Double precioUnitario = detalleOrden.getProductoTalle().getProducto().getPrecio();
+        detalleOrden.setPrecioUnitario(precioUnitario);
+
         return detalleOrdenRepository.save(detalleOrden);
     }
 
