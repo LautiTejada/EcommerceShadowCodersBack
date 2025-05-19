@@ -1,6 +1,6 @@
 package com.dresscode.api_dresscode.services;
 
-import com.dresscode.api_dresscode.dtos.DescuentoUpdateDTO;
+import com.dresscode.api_dresscode.dtos.DescuentoDTO;
 import com.dresscode.api_dresscode.entities.Descuento;
 import com.dresscode.api_dresscode.entities.DescuentoProducto;
 import com.dresscode.api_dresscode.entities.Producto;
@@ -44,7 +44,7 @@ public class DescuentoService {
     }
 
     @Transactional
-    public Descuento editarDescuento(Long id, DescuentoUpdateDTO datosActualizados) {
+    public Descuento editarDescuento(Long id, DescuentoDTO datosActualizados) {
         Descuento descuentoExistente = getDescuentoById(id);
 
         if (datosActualizados.getFechaCierre().isBefore(datosActualizados.getFechaInicio())) {

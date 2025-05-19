@@ -1,8 +1,11 @@
 package com.dresscode.api_dresscode.services;
 
+import com.dresscode.api_dresscode.dtos.ImagenProductoDTO;
 import com.dresscode.api_dresscode.entities.Categoria;
+import com.dresscode.api_dresscode.entities.ImagenProducto;
 import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.repositories.CategoriaRepository;
+import com.dresscode.api_dresscode.repositories.ImagenProductoRepository;
 import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ public class ProductoService {
 
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
+    private final ImagenProductoRepository imagenProductoRepository;
 
     public List<Producto> getAllProductos() {
         return productoRepository.findAll();
@@ -72,6 +76,24 @@ public class ProductoService {
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada con id: " + categoriaId));
         return productoRepository.findByCategoria(categoria);
     }
+
+    public ImagenProducto agregarImagenAProducto(Long productoId, ImagenProducto imagen) {
+        Producto producto = productoRepository.findById(productoId)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        imagen.setProducto(producto);
+        return imagenProductoRepository.save(imagen);
+    }
+
+    public ImagenProducto editarImagenProducto(Long imagenId, ImagenProductoDTO imagenDTO) {
+        ImagenProducto imagenExistente = imagenProductoRepository.findById(imagenId)
+                .orElseThrow(() -> new RuntimeException("Imagen no encontrada"));
+
+        imagenExistente.setUrlImagen(imagenDTO.getUrlImagen());
+        imagenExistente.setPrincipal(imagenDTO.getPrincipal());
+
+        return imagenProductoRepository.save(imagenExistente);
+    }
+
 
 
 
