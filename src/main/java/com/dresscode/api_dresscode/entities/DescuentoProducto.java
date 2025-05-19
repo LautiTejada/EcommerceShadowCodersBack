@@ -1,5 +1,7 @@
 package com.dresscode.api_dresscode.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -18,9 +20,11 @@ import lombok.NoArgsConstructor;
 public class DescuentoProducto extends Base{
     @ManyToOne
     @JoinColumn(name = "descuento_id", nullable = false)
+    @JsonBackReference
     private Descuento descuento;
 
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
+    @JsonBackReference
     private Producto producto;
 }

@@ -1,5 +1,6 @@
 package com.dresscode.api_dresscode.controllers;
 
+import com.dresscode.api_dresscode.dtos.DescuentoUpdateDTO;
 import com.dresscode.api_dresscode.entities.Descuento;
 import com.dresscode.api_dresscode.entities.DescuentoProducto;
 import com.dresscode.api_dresscode.services.DescuentoService;
@@ -36,7 +37,7 @@ public class DescuentoController {
     }
 
     @PutMapping("/{descuentoId}")
-    public ResponseEntity<Descuento> actualizarDescuento(@PathVariable Long descuentoId, @RequestBody Descuento descuento){
+    public ResponseEntity<Descuento> actualizarDescuento(@PathVariable Long descuentoId, @RequestBody DescuentoUpdateDTO descuento){
         Descuento descuentoActualizado = descuentoService.editarDescuento(descuentoId, descuento);
         return ResponseEntity.ok(descuentoActualizado);
     }

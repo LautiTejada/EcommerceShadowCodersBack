@@ -1,5 +1,6 @@
 package com.dresscode.api_dresscode.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,7 @@ public class Descuento extends Base{
     private Integer porcentajeDescuento;
 
     @OneToMany(mappedBy = "descuento", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     @Builder.Default
     private List<DescuentoProducto> productos = new ArrayList<>();
 }

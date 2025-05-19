@@ -1,5 +1,6 @@
 package com.dresscode.api_dresscode.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +23,6 @@ public class Talle extends Base{
 
     @OneToMany(mappedBy = "talle", cascade = CascadeType.ALL)
     @Builder.Default
+    @JsonIgnore
     private List<ProductoTalle> productos = new ArrayList<>();
 }
