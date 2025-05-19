@@ -1,9 +1,12 @@
 package com.dresscode.api_dresscode.services;
 
 import com.dresscode.api_dresscode.dtos.ImagenProductoDTO;
+import com.dresscode.api_dresscode.dtos.ProductoDTO;
 import com.dresscode.api_dresscode.entities.Categoria;
 import com.dresscode.api_dresscode.entities.ImagenProducto;
 import com.dresscode.api_dresscode.entities.Producto;
+import com.dresscode.api_dresscode.entities.enums.Color;
+import com.dresscode.api_dresscode.entities.enums.Marca;
 import com.dresscode.api_dresscode.repositories.CategoriaRepository;
 import com.dresscode.api_dresscode.repositories.ImagenProductoRepository;
 import com.dresscode.api_dresscode.repositories.ProductoRepository;
@@ -32,11 +35,19 @@ public class ProductoService {
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + id));
     }
 
-    public Producto createProducto(Producto producto, Long categoriaId) {
+    public Producto createProducto(ProductoDTO producto, Long categoriaId) {
         Categoria categoria = categoriaRepository.findById(categoriaId)
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada con id: " + categoriaId));
-        producto.setCategoria(categoria);
-        return productoRepository.save(producto);
+        Producto nuevoProducto = Producto.builder()
+                .nombre(producto.getNombre())
+                .precio(producto.getPrecio())
+                .descripcion(producto.getDescripcion())
+                .color(Color.valueOf(producto.getColor().toUpperCase()))
+                .marca(Marca.valueOf(producto.getMarca().toUpperCase()))
+                .activo(producto.getActivo())
+                .categoria(categoria)
+                .build();
+        return productoRepository.save(nuevoProducto);
 
     }
 

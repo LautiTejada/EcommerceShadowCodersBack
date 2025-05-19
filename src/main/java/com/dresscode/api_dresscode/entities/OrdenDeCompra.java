@@ -2,6 +2,7 @@ package com.dresscode.api_dresscode.entities;
 
 import com.dresscode.api_dresscode.entities.enums.EstadoOrden;
 import com.dresscode.api_dresscode.entities.enums.MetodoPago;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,6 +45,7 @@ public class OrdenDeCompra extends Base{
     private EstadoOrden estadoOrden;
 
     @OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     @Builder.Default
     private List<DetalleOrden> detalles = new ArrayList<>();
 

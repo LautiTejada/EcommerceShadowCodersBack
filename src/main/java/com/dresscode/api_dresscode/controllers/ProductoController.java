@@ -1,6 +1,7 @@
 package com.dresscode.api_dresscode.controllers;
 
 import com.dresscode.api_dresscode.dtos.ImagenProductoDTO;
+import com.dresscode.api_dresscode.dtos.ProductoDTO;
 import com.dresscode.api_dresscode.entities.ImagenProducto;
 import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.services.ProductoService;
@@ -34,7 +35,7 @@ public class ProductoController {
     }
 
     @PostMapping("/{categoriaId}")
-    public ResponseEntity<Producto> crearProducto(@Valid @RequestBody Producto producto, @PathVariable Long categoriaId){
+    public ResponseEntity<Producto> crearProducto(@Valid @RequestBody ProductoDTO producto, @PathVariable Long categoriaId){
         Producto nuevoProducto = productoService.createProducto(producto, categoriaId);
         return ResponseEntity.status(201).body(nuevoProducto);
     }

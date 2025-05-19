@@ -1,5 +1,6 @@
 package com.dresscode.api_dresscode.controllers;
 
+import com.dresscode.api_dresscode.dtos.OrdenDeCompraDTO;
 import com.dresscode.api_dresscode.entities.OrdenDeCompra;
 import com.dresscode.api_dresscode.entities.enums.EstadoOrden;
 import com.dresscode.api_dresscode.services.OrdenDeCompraService;
@@ -55,4 +56,11 @@ public class OrdenDeCompraController {
         List<OrdenDeCompra> ordenes = ordenDeCompraService.getOrdenesByUsuario(idUsuario);
         return ResponseEntity.ok(ordenes);
     }
+
+    @PostMapping("/detalle")
+    public ResponseEntity<OrdenDeCompra> crearOrdenConDetalles(@RequestBody OrdenDeCompraDTO ordenCompra) {
+        OrdenDeCompra nuevaOrden = ordenDeCompraService.crearOrdenConDetalles(ordenCompra);
+        return ResponseEntity.status(201).body(nuevaOrden);
+    }
+
 }
