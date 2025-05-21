@@ -1,5 +1,6 @@
 package com.dresscode.api_dresscode.services;
 
+import com.dresscode.api_dresscode.dtos.TipoDTO;
 import com.dresscode.api_dresscode.entities.Categoria;
 import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.entities.Tipo;
@@ -31,13 +32,17 @@ public class TipoService {
     }
 
 
-    public Tipo createTipo(Tipo tipo) {
+    public Tipo createTipo(TipoDTO tipoDTO) {
+        Tipo tipo = Tipo.builder()
+                .nombre(tipoDTO.getNombre())
+                .build();
         return tipoRepository.save(tipo);
     }
 
 
+
     @Transactional
-    public Tipo updateTipo(Long id, Tipo tipoActualizado) {
+    public Tipo updateTipo(Long id, TipoDTO tipoActualizado) {
         Tipo tipoExistente = getTipoById(id);
         tipoExistente.setNombre(tipoActualizado.getNombre());
         return tipoRepository.save(tipoExistente);

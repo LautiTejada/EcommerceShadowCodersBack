@@ -99,6 +99,7 @@ public class OrdenDeCompraService {
         List<DetalleOrden> detalles = ordenCompra.getDetalles().stream().map(detalleReq -> {
             ProductoTalle productoTalle = productoTalleService.traerProductoTallePorId(detalleReq.getProductoTalleId());
 
+
             return DetalleOrden.builder()
                     .ordenDeCompra(orden)
                     .productoTalle(productoTalle)
