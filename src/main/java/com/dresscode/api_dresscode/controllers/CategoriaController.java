@@ -1,5 +1,6 @@
 package com.dresscode.api_dresscode.controllers;
 
+import com.dresscode.api_dresscode.dtos.CategoriaDTO;
 import com.dresscode.api_dresscode.entities.Categoria;
 import com.dresscode.api_dresscode.services.CategoriaService;
 import jakarta.validation.Valid;
@@ -28,11 +29,10 @@ public class CategoriaController {
         return ResponseEntity.ok(categoria);
     }
 
-    @PostMapping
-    public ResponseEntity<Categoria> crearCategoria(@Valid @RequestBody Categoria categoria){
-        Categoria nuevaCategoria = categoriaService.createCategoria(categoria);
+    @PostMapping("/tipo/{tipoId}")
+    public ResponseEntity<Categoria> crearCategoria(@PathVariable Long tipoId ,@Valid @RequestBody CategoriaDTO categoria){
+        Categoria nuevaCategoria = categoriaService.createCategoria(tipoId ,categoria);
         return ResponseEntity.status(201).body(nuevaCategoria);
-
     }
 
     @PutMapping("/{categoriaId}")

@@ -1,7 +1,9 @@
 package com.dresscode.api_dresscode.services;
 
+import com.dresscode.api_dresscode.dtos.CategoriaDTO;
 import com.dresscode.api_dresscode.entities.Categoria;
 import com.dresscode.api_dresscode.entities.Producto;
+import com.dresscode.api_dresscode.entities.Tipo;
 import com.dresscode.api_dresscode.repositories.CategoriaRepository;
 import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
     private final ProductoRepository productoRepository;
+    private final TipoService tipoService;
 
 
     public List<Categoria> getAllCategorias() {
@@ -28,7 +31,14 @@ public class CategoriaService {
             .orElseThrow(() -> new RuntimeException("Categoria no encontrada con id: "+ id));
     }
 
-    public Categoria createCategoria(Categoria categoria) {
+    public Categoria createCategoria(Long tipoId, CategoriaDTO categoriaDTO) {
+        Tipo tipo = tipoService.getTipoById(tipoId);
+
+        Categoria categoria = Categoria.builder()
+                .nombreCategoria(categoriaDTO.getNombreCategoria())
+                .tipo(tipo)
+                .build();
+
         return categoriaRepository.save(categoria);
     }
 
