@@ -25,12 +25,6 @@ public class OrdenDeCompraController extends BaseController<OrdenDeCompra, Long>
         this.ordenDeCompraService = ordenDeCompraService;
     }
 
-    @PostMapping
-    public ResponseEntity<OrdenDeCompra> crearOrdenDeCompra(@Valid @RequestBody OrdenDeCompra orden){
-        OrdenDeCompra nuevaOrden = ordenDeCompraService.createOrdenDeCompra(orden);
-        return ResponseEntity.status(201).body(nuevaOrden);
-    }
-
     @PutMapping("/{ordenId}/actualizar-estado")
     public ResponseEntity<OrdenDeCompra> actualizarEstadoOrden(@PathVariable Long ordenId, @RequestParam EstadoOrden estadoOrden){
         OrdenDeCompra ordenActualizada = ordenDeCompraService.actualizarEstadoOrden(ordenId, estadoOrden);

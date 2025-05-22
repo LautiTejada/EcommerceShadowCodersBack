@@ -22,10 +22,8 @@ public class ProductoTalleController extends BaseController<ProductoTalle, Long>
         this.productoTalleService = productoTalleService;
     }
 
-    @PostMapping
-    public ResponseEntity<ProductoTalle> crearProductoTalle(
-            @Valid @RequestBody ProductoTalleDTO request
-    ) {
+    @PostMapping("/crear")
+    public ResponseEntity<ProductoTalle> crearProductoTalle(@Valid @RequestBody ProductoTalleDTO request) {
         ProductoTalle nuevo = productoTalleService.crearProductoTalle(
                 request.getProductoId(),
                 request.getTalleId(),

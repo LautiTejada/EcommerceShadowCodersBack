@@ -24,16 +24,17 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
     @Override
     protected JpaRepository<Usuario, Long> getRepository() {return usuarioRepository;}
 
-
-    public Usuario createUsuario(Usuario usuario) {
+    @Override
+    public Usuario save(Usuario usuario) {
         if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
             throw new RuntimeException("El email ya está en uso.");
         }
         return usuarioRepository.save(usuario);
     }
 
+    @Override
     @Transactional
-    public Usuario updateUsuario(Long id, Usuario usuarioActualizado) {
+    public Usuario update(Long id, Usuario usuarioActualizado) {
         Usuario usuarioExistente = findById(id);
         usuarioExistente.setNombreUsuario(usuarioActualizado.getNombreUsuario());
         usuarioExistente.setEmail(usuarioActualizado.getEmail());

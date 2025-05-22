@@ -23,15 +23,9 @@ public class UsuarioController extends BaseController<Usuario, Long>{
         this.usuarioService = usuarioService;
     }
 
-    @PostMapping
-    public ResponseEntity<Usuario> crearUsuario(@Valid @RequestBody Usuario usuario) {
-        Usuario nuevoUsuario = usuarioService.createUsuario(usuario);
-        return ResponseEntity.status(201).body(nuevoUsuario);
-    }
-
     @PutMapping("/{usuarioId}")
     public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long usuarioId, @Valid @RequestBody Usuario usuarioActualizado) {
-        Usuario usuario = usuarioService.updateUsuario(usuarioId, usuarioActualizado);
+        Usuario usuario = usuarioService.update(usuarioId, usuarioActualizado);
         return ResponseEntity.ok(usuario);
     }
 

@@ -34,22 +34,6 @@ public class OrdenDeCompraService extends BaseServiceImpl<OrdenDeCompra, Long> {
         return ordenDeCompraRepository;
     }
 
-    @Transactional
-    public OrdenDeCompra createOrdenDeCompra(OrdenDeCompra ordenDeCompra) {
-
-        var usuario = usuarioService.findById(ordenDeCompra.getUsuario().getId());
-        ordenDeCompra.setUsuario(usuario);
-
-        var direccion = direccionService.findById(ordenDeCompra.getDireccion().getId());
-        ordenDeCompra.setDireccion(direccion);
-
-        ordenDeCompra.setUsuario(usuario);
-        ordenDeCompra.setDireccion(direccion);
-        ordenDeCompra.setFecha(LocalDate.now());
-        ordenDeCompra.setEstadoOrden(EstadoOrden.PEDIDO);
-        return ordenDeCompraRepository.save(ordenDeCompra);
-    }
-
 
 
     @Transactional

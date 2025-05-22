@@ -9,6 +9,7 @@ import com.dresscode.api_dresscode.repositories.TalleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class ProductoTalleService extends BaseServiceImpl<ProductoTalle, Long> {
     }
 
 
-
+    @Transactional
     public ProductoTalle crearProductoTalle(Long productoId, Long talleId, Integer cantidad) {
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
