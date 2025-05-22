@@ -13,10 +13,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/producto-talles")
-@RequiredArgsConstructor
-public class ProductoTalleController {
+public class ProductoTalleController extends BaseController<ProductoTalle, Long> {
 
     private final ProductoTalleService productoTalleService;
+
+    public ProductoTalleController(ProductoTalleService productoTalleService) {
+        super(productoTalleService);
+        this.productoTalleService = productoTalleService;
+    }
 
     @PostMapping
     public ResponseEntity<ProductoTalle> crearProductoTalle(
@@ -31,31 +35,10 @@ public class ProductoTalleController {
     }
 
 
-    @PutMapping("/{productoTalleId}")
-    public ResponseEntity<ProductoTalle> actualizarCantidad(
-            @PathVariable Long productoTalleId,
-            @RequestParam Integer nuevaCantidad
-    ) {
-        ProductoTalle actualizado = productoTalleService.actualizarCantidad(productoTalleId, nuevaCantidad);
-        return ResponseEntity.ok(actualizado);
-    }
-
-
-    @GetMapping("/producto/{productoId}")
-    public ResponseEntity<List<ProductoTalle>> obtenerTallesPorProducto(@PathVariable Long productoId) {
-        List<ProductoTalle> lista = productoTalleService.obtenerTallesPorProducto(productoId);
-        return ResponseEntity.ok(lista);
-    }
-
     @GetMapping("/producto/{productoId}/cantidad-total")
     public ResponseEntity<Integer> obtenerCantidadTotal(@PathVariable Long productoId) {
         Integer total = productoTalleService.obtenerCantidadTotalDeProducto(productoId);
         return ResponseEntity.ok(total);
     }
 
-    @DeleteMapping("/{productoTalleId}")
-    public ResponseEntity<Void> eliminarProductoTalle(@PathVariable Long productoTalleId) {
-        productoTalleService.eliminarProductoTalle(productoTalleId);
-        return ResponseEntity.noContent().build();
-    }
 }

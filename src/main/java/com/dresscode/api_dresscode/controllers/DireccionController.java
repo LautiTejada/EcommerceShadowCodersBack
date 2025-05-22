@@ -11,35 +11,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/direcciones")
-@RequiredArgsConstructor
-public class DireccionController {
- private final DireccionService direccionService;
+public class DireccionController extends BaseController<Direccion, Long> {
 
-    @GetMapping
-    public ResponseEntity<List<Direccion>> obtenerTodasLasDirecciones(){
-        List<Direccion> direcciones = direccionService.gertAllDirecciones();
-        return ResponseEntity.ok(direcciones);
+    private final DireccionService direccionService;
+
+    public DireccionController(DireccionService direccionService) {
+        super(direccionService);
+        this.direccionService = direccionService;
     }
 
-     @GetMapping("/{direccionId}")
-     public ResponseEntity<Direccion> obtenerDireccionPorId(@PathVariable Long direccionId) {
-             Direccion direccion = direccionService.getDireccionById(direccionId);
-             return ResponseEntity.ok(direccion);
-     }
-
-    @PutMapping("/{direccionId}")
-    public ResponseEntity<Direccion> editarDireccion(
-            @PathVariable Long direccionId,
-            @RequestBody Direccion datosActualizados) {
-            Direccion direccionActualizada = direccionService.editarDireccion(direccionId, datosActualizados);
-            return ResponseEntity.ok(direccionActualizada);
-
-    }
-
-    @DeleteMapping("/{direccionId}")
-    public ResponseEntity<Direccion> eliminarDireccion(@PathVariable Long direccionId) {
-            direccionService.eliminarDireccion(direccionId);
-            return ResponseEntity.noContent().build();
-
-    }
 }

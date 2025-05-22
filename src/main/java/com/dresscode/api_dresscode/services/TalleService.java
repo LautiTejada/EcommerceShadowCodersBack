@@ -7,6 +7,7 @@ import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import com.dresscode.api_dresscode.repositories.ProductoTalleRepository;
 import com.dresscode.api_dresscode.repositories.TalleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,36 +16,19 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 
-public class TalleService {
+public class TalleService extends BaseServiceImpl<Talle, Long> {
     private final TalleRepository talleRepository;
     private final ProductoRepository productoRepository;
     private final ProductoTalleRepository productoTalleRepository;
 
-    public List<Talle> getAllTalles() {
-        return talleRepository.findAll();
+    @Override
+    protected JpaRepository<Talle, Long> getRepository() {
+        return talleRepository;
     }
 
-    public Talle getTalleById(Long id) {
-        return talleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Talle no encontrado con id: " + id));
-    }
 
-    public Talle createTalle(Talle talle) {
-        return talleRepository.save(talle);
-    }
 
-    @Transactional
-    public Talle updateTalle(Long id, Talle talleActualizado) {
-        Talle talleExistente = getTalleById(id);
-        talleExistente.setTipoTalle(talleActualizado.getTipoTalle());
-        return talleRepository.save(talleExistente);
-    }
 
-    @Transactional
-    public void deleteTalle(Long id) {
-        Talle talle = getTalleById(id);
-        talleRepository.delete(talle);
-    }
 
     public void asignarTalleAProducto(Long productoId, Long talleId) {
         Producto producto = productoRepository.findById(productoId)

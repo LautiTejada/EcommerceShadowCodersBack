@@ -8,6 +8,7 @@ import com.dresscode.api_dresscode.repositories.DireccionRepository;
 import com.dresscode.api_dresscode.repositories.OrdenDeCompraRepository;
 import com.dresscode.api_dresscode.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 
-public class OrdenDeCompraService {
+public class OrdenDeCompraService extends BaseServiceImpl<OrdenDeCompra, Long> {
 
     private final OrdenDeCompraRepository ordenDeCompraRepository;
     private final UsuarioRepository usuarioRepository;
@@ -28,13 +29,9 @@ public class OrdenDeCompraService {
     private final ProductoTalleService productoTalleService;
     private final DetalleOrdenRepository detalleOrdenRepository;
 
-    public List<OrdenDeCompra> getAllOrdenesDeCompra() {
-        return ordenDeCompraRepository.findAll();
-    }
-
-    public OrdenDeCompra getOrdenDeCompraById(Long id) {
-        return ordenDeCompraRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Orden de compra no encontrada con el id: " + id));
+    @Override
+    protected JpaRepository<OrdenDeCompra, Long> getRepository() {
+        return ordenDeCompraRepository;
     }
 
     @Transactional
@@ -43,7 +40,7 @@ public class OrdenDeCompraService {
         var usuario = usuarioService.getUsuarioById(ordenDeCompra.getUsuario().getId());
         ordenDeCompra.setUsuario(usuario);
 
-        var direccion = direccionService.getDireccionById(ordenDeCompra.getDireccion().getId());
+        var direccion = direccionService.findById(ordenDeCompra.getDireccion().getId());
         ordenDeCompra.setDireccion(direccion);
 
         ordenDeCompra.setUsuario(usuario);
@@ -57,16 +54,11 @@ public class OrdenDeCompraService {
 
     @Transactional
     public OrdenDeCompra actualizarEstadoOrden(Long ordenId, EstadoOrden nuevoEstado) {
-        OrdenDeCompra orden = getOrdenDeCompraById(ordenId);
+        OrdenDeCompra orden = findById(ordenId);
         orden.setEstadoOrden(nuevoEstado);
         return ordenDeCompraRepository.save(orden);
     }
 
-    @Transactional
-    public void eliminarOrden(Long id) {
-        OrdenDeCompra orden = getOrdenDeCompraById(id);
-        ordenDeCompraRepository.delete(orden);
-    }
 
     public List<OrdenDeCompra> getOrdenesByUsuario(Long usuarioId) {
         return ordenDeCompraRepository.findByUsuarioId(usuarioId);
@@ -97,7 +89,7 @@ public class OrdenDeCompraService {
         ordenDeCompraRepository.save(orden);
 
         List<DetalleOrden> detalles = ordenCompra.getDetalles().stream().map(detalleReq -> {
-            ProductoTalle productoTalle = productoTalleService.traerProductoTallePorId(detalleReq.getProductoTalleId());
+            ProductoTalle productoTalle = productoTalleService.findById(detalleReq.getProductoTalleId());
 
 
             return DetalleOrden.builder()

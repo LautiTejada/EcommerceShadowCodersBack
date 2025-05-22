@@ -15,24 +15,16 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/productos")
-@RequiredArgsConstructor
-
-public class ProductoController {
+public class ProductoController extends BaseController<Producto, Long> {
 
     private final ProductoService productoService;
 
-    @GetMapping
-    public ResponseEntity<List<Producto>> obtenerTodosLosProductos(){
-        List<Producto> productos = productoService.getAllProductos();
-        return ResponseEntity.ok(productos);
+    public ProductoController(ProductoService productoService) {
+        super(productoService);
+        this.productoService = productoService;
     }
 
-    @GetMapping("/{productoId}")
-    public ResponseEntity<Producto> obtenerProductoPorId(@PathVariable Long productoId){
-        Producto producto = productoService.getProductoById(productoId);
-        return ResponseEntity.ok(producto);
 
-    }
 
     @PostMapping("/{categoriaId}")
     public ResponseEntity<Producto> crearProducto(@Valid @RequestBody ProductoDTO producto, @PathVariable Long categoriaId){
@@ -46,11 +38,6 @@ public class ProductoController {
         return ResponseEntity.ok(nuevoProducto);
     }
 
-    @DeleteMapping("/{productoId}")
-    public ResponseEntity<Producto> eliminarProducto(@PathVariable Long productoId){
-        productoService.deleteProducto(productoId);
-        return ResponseEntity.noContent().build();
-    }
 
     @PutMapping("/{productoId}/cambiar-etado")
     public ResponseEntity<Producto> cambiarEstadoProducto(@PathVariable Long productoId, @RequestParam Boolean nuevoEstado){

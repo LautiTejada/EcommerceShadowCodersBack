@@ -11,6 +11,7 @@ import com.dresscode.api_dresscode.repositories.CategoriaRepository;
 import com.dresscode.api_dresscode.repositories.ImagenProductoRepository;
 import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,19 +21,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 
-public class ProductoService {
+public class ProductoService extends BaseServiceImpl<Producto, Long> {
 
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
     private final ImagenProductoRepository imagenProductoRepository;
 
-    public List<Producto> getAllProductos() {
-        return productoRepository.findAll();
-    }
-
-    public Producto getProductoById(Long id) {
-        return productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + id));
+    @Override
+    protected JpaRepository<Producto, Long> getRepository() {
+        return productoRepository;
     }
 
     public Producto createProducto(ProductoDTO producto, Long categoriaId) {
@@ -52,7 +49,7 @@ public class ProductoService {
     }
 
     public Producto updateProducto(Long id, Producto productoActualizado) {
-        Producto productoExistente = getProductoById(id);
+        Producto productoExistente = findById(id);
 
         productoExistente.setNombre(productoActualizado.getNombre());
         productoExistente.setPrecio(productoActualizado.getPrecio());
@@ -70,14 +67,9 @@ public class ProductoService {
         return productoRepository.save(productoExistente);
     }
 
-    public Producto deleteProducto(Long id) {
-        Producto productoEliminado = getProductoById(id);
-        productoRepository.delete(productoEliminado);
-        return productoEliminado;
-    }
 
     public Producto cambiarEstadoProducto(Long id, Boolean nuevoEstado) {
-        Producto producto = getProductoById(id);
+        Producto producto = findById(id);
         producto.setActivo(nuevoEstado);
         return productoRepository.save(producto);
     }
