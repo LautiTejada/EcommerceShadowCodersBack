@@ -14,35 +14,16 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/tipos")
-@RequiredArgsConstructor
 
-public class TipoController {
+public class TipoController extends BaseController<Tipo, Long> {
 
     private final TipoService tipoService;
 
-    @GetMapping
-    public ResponseEntity<List<Tipo>> obtenerTodosLosTipos() {
-        List<Tipo> tipos  = tipoService.getAllTipos();
-        return ResponseEntity.ok(tipos);
+    public TipoController(TipoService tipoService){
+        super(tipoService);
+        this.tipoService = tipoService;
     }
 
-    @GetMapping("/{tipoId}")
-    public ResponseEntity<Tipo> obtenerTipoPorId(@PathVariable Long tipoId) {
-        Tipo tipo = tipoService.getTipoById(tipoId);
-        return ResponseEntity.ok(tipo);
-    }
-
-    @PostMapping
-    public ResponseEntity<Tipo> crearTipo(@Valid @RequestBody TipoDTO tipo) {
-        Tipo nuevoTipo = tipoService.createTipo(tipo);
-        return ResponseEntity.status(201).body(nuevoTipo);
-    }
-
-    @PutMapping("/{tipoId}")
-    public ResponseEntity<Tipo> editarTipo(@PathVariable Long tipoId,@Valid @RequestBody TipoDTO tipo ){
-        Tipo tipoEditado = tipoService.updateTipo(tipoId, tipo);
-        return ResponseEntity.ok(tipoEditado);
-    }
 
     @DeleteMapping("/{tipoId}")
     public ResponseEntity<Tipo> eliminarTipoPorId(@PathVariable Long tipoId){

@@ -1,17 +1,10 @@
 package com.dresscode.api_dresscode.services;
-
-import com.dresscode.api_dresscode.dtos.CategoriaDTO;
 import com.dresscode.api_dresscode.entities.Categoria;
-import com.dresscode.api_dresscode.entities.Producto;
-import com.dresscode.api_dresscode.entities.Tipo;
 import com.dresscode.api_dresscode.repositories.CategoriaRepository;
-import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

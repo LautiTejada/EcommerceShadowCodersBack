@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TalleRepository extends JpaRepository<Talle,Long> {
+public interface TalleRepository extends BaseRepository<Talle,Long> {
 }
