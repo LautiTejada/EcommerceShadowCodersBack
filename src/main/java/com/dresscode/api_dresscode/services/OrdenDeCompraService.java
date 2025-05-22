@@ -37,7 +37,7 @@ public class OrdenDeCompraService extends BaseServiceImpl<OrdenDeCompra, Long> {
     @Transactional
     public OrdenDeCompra createOrdenDeCompra(OrdenDeCompra ordenDeCompra) {
 
-        var usuario = usuarioService.getUsuarioById(ordenDeCompra.getUsuario().getId());
+        var usuario = usuarioService.findById(ordenDeCompra.getUsuario().getId());
         ordenDeCompra.setUsuario(usuario);
 
         var direccion = direccionService.findById(ordenDeCompra.getDireccion().getId());

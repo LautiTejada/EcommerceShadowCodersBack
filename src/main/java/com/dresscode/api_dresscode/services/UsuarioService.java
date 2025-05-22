@@ -67,7 +67,7 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
     public Direccion editarDireccionDeUsuario(Long usuarioId, Long direccionId, Direccion direccionActualizada) {
         Usuario usuario = findById(usuarioId);
 
-        Direccion direccion = direccionService.getDireccionById(direccionId);
+        Direccion direccion = direccionService.findById(direccionId);
 
         direccion.setCalle(direccionActualizada.getCalle());
         direccion.setNumero(direccionActualizada.getNumero());

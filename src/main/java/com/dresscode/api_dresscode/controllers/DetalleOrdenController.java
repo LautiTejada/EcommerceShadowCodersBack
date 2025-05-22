@@ -30,7 +30,7 @@ public class DetalleOrdenController extends BaseController{
 
     }
 
-    @PutMapping("/{detalleId}")
+    @PutMapping("/actualizar-cantidad/{detalleId}")
     public ResponseEntity<DetalleOrden> actualizarDetallerOrden(@PathVariable Long detalleId, @RequestParam Integer nuevaCantidad){
         DetalleOrden detalleActualizado = detalleOrdenService.actualizarDetalleOrden(detalleId,nuevaCantidad);
         return ResponseEntity.status(201).body(detalleActualizado);
