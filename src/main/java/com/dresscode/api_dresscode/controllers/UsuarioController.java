@@ -13,22 +13,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuarios")
-@RequiredArgsConstructor
 
-public class UsuarioController {
+public class UsuarioController extends BaseController<Usuario, Long>{
 
     private final UsuarioService usuarioService;
 
-    @GetMapping
-    public ResponseEntity<List<Usuario>> obtenerTodosLosUsuarios() {
-        List<Usuario> usuarios = usuarioService.gertAllUsuarios();
-        return ResponseEntity.ok(usuarios);
-    }
-
-    @GetMapping("/{usuarioId}")
-    public ResponseEntity<Usuario> obtenerUsuarioPorId(@PathVariable Long usuarioId) {
-        Usuario usuario = usuarioService.getUsuarioById(usuarioId);
-        return ResponseEntity.ok(usuario);
+    public UsuarioController(UsuarioService usuarioService){
+        super(usuarioService);
+        this.usuarioService = usuarioService;
     }
 
     @PostMapping
@@ -43,11 +35,6 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
-    @DeleteMapping("/{usuarioId}")
-    public ResponseEntity<Void> eliminarUsuario(@PathVariable Long usuarioId) {
-        usuarioService.deleteUsuario(usuarioId);
-        return ResponseEntity.noContent().build();
-    }
 
     @PostMapping("/{usuarioId}/direcciones")
     public ResponseEntity<Direccion> crearDireccionYAsignarAUsuario(

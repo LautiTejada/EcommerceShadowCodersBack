@@ -12,21 +12,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/detalles-orden")
-@RequiredArgsConstructor
 
-public class DetalleOrdenController {
+public class DetalleOrdenController extends BaseController{
+
     private final DetalleOrdenService detalleOrdenService;
-    @GetMapping
-    public ResponseEntity<List<DetalleOrden>> obtenerTodosLosDetalles(){
-        List<DetalleOrden> detalles = detalleOrdenService.getAllDetalles();
-        return ResponseEntity.ok(detalles);
 
-    }
-
-    @GetMapping("/{detalleId}")
-    public ResponseEntity<DetalleOrden> obtenerDetallesPorId(@PathVariable Long detalleId){
-        DetalleOrden detalle = detalleOrdenService.getDetalleById(detalleId);
-        return ResponseEntity.ok(detalle);
+    public DetalleOrdenController(DetalleOrdenService detalleOrdenService){
+        super(detalleOrdenService);
+        this.detalleOrdenService = detalleOrdenService;
     }
 
 
@@ -43,9 +36,4 @@ public class DetalleOrdenController {
         return ResponseEntity.status(201).body(detalleActualizado);
     }
 
-    @DeleteMapping("/{detalleId}")
-    public  ResponseEntity<DetalleOrden> eliminarDetalleDeOrden(@PathVariable Long detalleId){
-        detalleOrdenService.eliminarDetalleDeOrden(detalleId);
-        return ResponseEntity.noContent().build();
-    }
 }

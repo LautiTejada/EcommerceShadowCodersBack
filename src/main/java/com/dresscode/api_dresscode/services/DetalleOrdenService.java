@@ -7,6 +7,7 @@ import com.dresscode.api_dresscode.repositories.DetalleOrdenRepository;
 import com.dresscode.api_dresscode.repositories.OrdenDeCompraRepository;
 import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,22 +16,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 
-public class DetalleOrdenService {
+public class DetalleOrdenService extends BaseServiceImpl<DetalleOrden, Long>{
 
     private final DetalleOrdenRepository detalleOrdenRepository;
-    private final OrdenDeCompraRepository ordenDeCompraRepository;
-    private final ProductoRepository productoRepository;
-    private final OrdenDeCompraService ordenDeCompraService;
-    private final ProductoService productoService;
 
-    public List<DetalleOrden> getAllDetalles() {
-        return detalleOrdenRepository.findAll();
-    }
-
-    public DetalleOrden getDetalleById(Long id) {
-        return detalleOrdenRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Detalle no encontrado con id: " + id));
-    }
+    @Override
+    protected JpaRepository<DetalleOrden, Long> getRepository(){return detalleOrdenRepository;}
 
 
     public List<DetalleOrden> obtenerDetallesPorOrden(Long ordenId) {
@@ -39,15 +30,8 @@ public class DetalleOrdenService {
 
 
     @Transactional
-    public void eliminarDetalleDeOrden(Long detalleId) {
-        DetalleOrden detalleOrden = getDetalleById(detalleId);
-
-        detalleOrdenRepository.delete(detalleOrden);
-    }
-
-    @Transactional
     public DetalleOrden actualizarDetalleOrden(Long detalleId, Integer nuevaCantidad) {
-        DetalleOrden detalleOrden = getDetalleById(detalleId);
+        DetalleOrden detalleOrden = findById(detalleId);
 
         if (nuevaCantidad <= 0) {
             throw new IllegalArgumentException("La cantidad debe ser mayor a 0.");
