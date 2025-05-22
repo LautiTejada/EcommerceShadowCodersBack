@@ -5,6 +5,7 @@ import com.dresscode.api_dresscode.entities.Categoria;
 import com.dresscode.api_dresscode.services.CategoriaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,38 +13,28 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categorias")
-@RequiredArgsConstructor
+public class CategoriaController extends BaseController<Categoria, Long> {
 
-public class CategoriaController {
     private final CategoriaService categoriaService;
 
-    @GetMapping
-    public ResponseEntity<List<Categoria>> obtenerTodasLasCategorias(){
-        List<Categoria> categorias = categoriaService.getAllCategorias();
-        return ResponseEntity.ok(categorias);
+    public CategoriaController(CategoriaService categoriaService) {
+        super(categoriaService);
+        this.categoriaService = categoriaService;
     }
 
-    @GetMapping("/{categoriaId}")
-    public ResponseEntity<Categoria> obtenerCategoriaPorId(@PathVariable Long categoriaId){
-        Categoria categoria = categoriaService.getCategoriaById(categoriaId);
-        return ResponseEntity.ok(categoria);
-    }
 
-    @PostMapping("/tipo/{tipoId}")
-    public ResponseEntity<Categoria> crearCategoria(@PathVariable Long tipoId ,@Valid @RequestBody CategoriaDTO categoria){
-        Categoria nuevaCategoria = categoriaService.createCategoria(tipoId ,categoria);
-        return ResponseEntity.status(201).body(nuevaCategoria);
-    }
 
     @PutMapping("/{categoriaId}")
-    public ResponseEntity<Categoria> actualizarCategoria(@PathVariable Long categoriaId, @RequestBody Categoria categoria){
-        Categoria categoriaActualizada = categoriaService.updateCategoria(categoriaId, categoria);
-        return ResponseEntity.ok(categoriaActualizada);
+    public ResponseEntity<Categoria> editarCategoria(@PathVariable Long categoriaId, @RequestBody Categoria categoria){
+        Categoria categoriaActualizada = categoriaService.update(categoriaId, categoria);
+        return ResponseEntity.status(HttpStatus.OK).body(categoriaActualizada);
     }
 
     @DeleteMapping("/{categoriaId}")
-    public  ResponseEntity<Categoria> eliminarCategoria(@PathVariable Long categoriaId){
-        categoriaService.deleteCategoria(categoriaId);
+    public ResponseEntity<Categoria> eliminarCategoria(@PathVariable Long categoriaId){
+        categoriaService.delete(categoriaId);
         return ResponseEntity.noContent().build();
     }
+
+
 }

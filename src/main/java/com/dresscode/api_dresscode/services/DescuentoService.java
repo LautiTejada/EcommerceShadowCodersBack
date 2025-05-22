@@ -20,7 +20,6 @@ public class DescuentoService {
 
     private final DescuentoRepository descuentoRepository;
     private final ProductoRepository productoRepository;
-    private final DescuentoProductoRepository descuentoProductoRepository;
 
     public List<Descuento> getAllDescuentos() {
         return descuentoRepository.findAll();
