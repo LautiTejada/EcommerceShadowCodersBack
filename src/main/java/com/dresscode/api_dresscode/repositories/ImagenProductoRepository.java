@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ImagenProductoRepository extends JpaRepository<ImagenProducto, Long> {
+public interface ImagenProductoRepository extends BaseRepository<ImagenProducto, Long> {
     List<ImagenProducto> findByProductoId(Long productoId);
     boolean existsByProductoIdAndPrincipalTrue(Long productoId);
 }
