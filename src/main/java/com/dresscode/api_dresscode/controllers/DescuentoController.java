@@ -11,41 +11,24 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/descuentos")
-@RequiredArgsConstructor
 
-public class DescuentoController {
+public class DescuentoController extends BaseController<Descuento, Long> {
 
     private final DescuentoService descuentoService;
 
-    @GetMapping
-    public ResponseEntity<List<Descuento>> obtenerTodosLosDescuentos(){
-        List<Descuento> descuentos = descuentoService.getAllDescuentos();
-        return ResponseEntity.ok(descuentos);
+    public DescuentoController(DescuentoService descuentoService){
+        super(descuentoService);
+        this.descuentoService = descuentoService;
     }
 
-    @GetMapping("/{descuentoId}")
-    public ResponseEntity<Descuento> obtenerDescuentoPorId (@PathVariable Long descuentoId){
-        Descuento descuento = descuentoService.getDescuentoById(descuentoId);
-        return ResponseEntity.ok(descuento);
-    }
 
-    @PostMapping
-    public ResponseEntity<Descuento> crearDescuento(@RequestBody Descuento descuento){
-        Descuento nuevoDescuento = descuentoService.createDescuento(descuento);
-        return ResponseEntity.status(201).body(nuevoDescuento);
-    }
 
     @PutMapping("/{descuentoId}")
-    public ResponseEntity<Descuento> actualizarDescuento(@PathVariable Long descuentoId, @RequestBody DescuentoDTO descuento){
-        Descuento descuentoActualizado = descuentoService.editarDescuento(descuentoId, descuento);
+    public ResponseEntity<Descuento> actualizarDescuento(@PathVariable Long descuentoId, @RequestBody Descuento descuento){
+        Descuento descuentoActualizado = descuentoService.update(descuentoId, descuento);
         return ResponseEntity.ok(descuentoActualizado);
     }
 
-    @DeleteMapping("/{descuentoId}")
-    public ResponseEntity<Descuento> eliminarDescuento(@PathVariable Long descuentoId){
-        descuentoService.deleteDescuento(descuentoId);
-        return ResponseEntity.noContent().build();
-    }
 
     @PostMapping("/{descuentoId}/productos/{idProducto}")
     public ResponseEntity<Descuento> agregarProductoADescuento(@PathVariable Long descuentoId, @PathVariable Long idProducto){

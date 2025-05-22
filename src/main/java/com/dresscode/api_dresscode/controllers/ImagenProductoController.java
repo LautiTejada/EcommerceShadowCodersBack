@@ -12,21 +12,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/imagenes-producto")
-@RequiredArgsConstructor
-public class ImagenProductoController {
+
+public class ImagenProductoController extends BaseController<ImagenProducto, Long>{
+
     private final ImagenProductoService imagenProductoService;
-    private final ProductoService productoService;
 
-    @GetMapping
-    public ResponseEntity<List<ImagenProducto>> getAllImagenes() {
-            List<ImagenProducto> imagenes = imagenProductoService.getAllImagenes();
-            return ResponseEntity.ok(imagenes);
-    }
-
-    @GetMapping("/{imagenId}")
-    public ResponseEntity<ImagenProducto> getImagenById(@PathVariable Long imagenId) {
-        ImagenProducto imagen = imagenProductoService.getImagenById(imagenId);
-        return ResponseEntity.ok(imagen);
+    public ImagenProductoController(ImagenProductoService imagenProductoService){
+        super(imagenProductoService);
+        this.imagenProductoService = imagenProductoService;
     }
 
     @GetMapping("/producto/{productoId}")
@@ -35,15 +28,4 @@ public class ImagenProductoController {
         return ResponseEntity.ok(imagenes);
     }
 
-    @PutMapping("/{imagenId}")
-    public ResponseEntity<ImagenProducto> updateImagen(@PathVariable Long imagenId, @RequestBody ImagenProducto imagenActualizada) {
-        ImagenProducto imagen = imagenProductoService.updateImagen(imagenId, imagenActualizada);
-        return ResponseEntity.ok(imagen);
-    }
-
-    @DeleteMapping("/{imagenId}")
-    public ResponseEntity<ImagenProducto> deleteImagen(@PathVariable Long imagenId) {
-        imagenProductoService.deleteImagen(imagenId);
-        return ResponseEntity.ok().build();
-    }
 }
