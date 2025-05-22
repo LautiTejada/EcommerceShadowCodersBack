@@ -7,6 +7,7 @@ import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import com.dresscode.api_dresscode.repositories.ProductoTalleRepository;
 import com.dresscode.api_dresscode.repositories.TalleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,17 +15,18 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 
-public class ProductoTalleService {
+public class ProductoTalleService extends BaseServiceImpl<ProductoTalle, Long> {
 
     private final ProductoTalleRepository productoTalleRepository;
     private final ProductoRepository productoRepository;
     private final TalleRepository talleRepository;
 
-    public ProductoTalle traerProductoTallePorId(Long productoTalleId) {
-        ProductoTalle productoTalle = productoTalleRepository.findById(productoTalleId)
-            .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-        return productoTalle;
+    @Override
+    protected JpaRepository<ProductoTalle,Long> getRepository() {
+        return productoTalleRepository;
     }
+
+
 
     public ProductoTalle crearProductoTalle(Long productoId, Long talleId, Integer cantidad) {
         Producto producto = productoRepository.findById(productoId)
@@ -62,8 +64,7 @@ public class ProductoTalleService {
                 .sum();
     }
 
-    public void eliminarProductoTalle(Long productoTalleId) {
-        productoTalleRepository.deleteById(productoTalleId);
-    }
+
+
 
 }

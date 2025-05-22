@@ -15,23 +15,17 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/ordenes-de-compra")
-@RequiredArgsConstructor
 
-public class OrdenDeCompraController {
+public class OrdenDeCompraController extends BaseController<OrdenDeCompra, Long> {
 
     private final OrdenDeCompraService ordenDeCompraService;
 
-    @GetMapping
-    public ResponseEntity<List<OrdenDeCompra>> obtenerTodasLasOrdenes(){
-        List<OrdenDeCompra> ordenesDeCompra = ordenDeCompraService.getAllOrdenesDeCompra();
-        return ResponseEntity.ok(ordenesDeCompra);
+    public OrdenDeCompraController(OrdenDeCompraService ordenDeCompraService) {
+        super(ordenDeCompraService);
+        this.ordenDeCompraService = ordenDeCompraService;
     }
 
-    @GetMapping("/{ordenId}")
-    public ResponseEntity<OrdenDeCompra> obtenerOrdenPorId(@PathVariable Long ordenId){
-        OrdenDeCompra orden = ordenDeCompraService.getOrdenDeCompraById(ordenId);
-        return ResponseEntity.ok(orden);
-    }
+
 
     @PostMapping
     public ResponseEntity<OrdenDeCompra> crearOrdenDeCompra(@Valid @RequestBody OrdenDeCompra orden){
@@ -45,11 +39,6 @@ public class OrdenDeCompraController {
         return ResponseEntity.ok(ordenActualizada);
     }
 
-    @DeleteMapping("/{ordenId}")
-    public ResponseEntity<OrdenDeCompra> eliminarOrdenDeCompra(@PathVariable Long ordenId){
-        ordenDeCompraService.eliminarOrden(ordenId);
-        return ResponseEntity.noContent().build();
-    }
 
     @GetMapping("/usuario/{idUsuario}")
     public ResponseEntity<List<OrdenDeCompra>> traerOrdenesPorUsuario(@PathVariable Long idUsuario){

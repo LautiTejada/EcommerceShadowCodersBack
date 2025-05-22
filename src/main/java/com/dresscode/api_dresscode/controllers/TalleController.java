@@ -12,40 +12,14 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/talles")
-@RequiredArgsConstructor
 
-public class TalleController {
+public class TalleController extends BaseController<Talle,Long> {
 
     private final TalleService talleService;
 
-    @GetMapping
-    public ResponseEntity<List<Talle>> obtenerTodosLosTalles() {
-        List<Talle> talles = talleService.getAllTalles();
-        return ResponseEntity.ok(talles);
-    }
-
-    @GetMapping("/{talleId}")
-    public ResponseEntity<Talle> obtenerTallePorId(@PathVariable Long talleId) {
-        Talle talle = talleService.getTalleById(talleId);
-        return  ResponseEntity.ok(talle);
-    }
-
-    @PostMapping
-    public ResponseEntity<Talle> crearTalle(@Valid @RequestBody Talle talle){
-        Talle nuevoTalle = talleService.createTalle(talle);
-        return ResponseEntity.status(201).body(nuevoTalle);
-    }
-
-    @PutMapping("/{talleId}")
-    public ResponseEntity<Talle> editarTalle(@PathVariable Long talleId, @Valid @RequestBody Talle talle){
-        Talle talleEditado = talleService.updateTalle(talleId, talle);
-        return ResponseEntity.ok(talleEditado);
-    }
-
-    @DeleteMapping("/{talleId}")
-    public ResponseEntity<Talle> eliminarTalle(@PathVariable Long talleId){
-        talleService.deleteTalle(talleId);
-        return ResponseEntity.noContent().build();
+    public TalleController(TalleService talleService) {
+        super(talleService);
+        this.talleService = talleService;
     }
 
     @PostMapping("/{talleId}/productos/{productoId}")
