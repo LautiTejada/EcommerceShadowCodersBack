@@ -23,7 +23,6 @@ public class CategoriaController extends BaseController<Categoria, Long> {
     }
 
 
-
     @PutMapping("/{categoriaId}")
     public ResponseEntity<Categoria> editarCategoria(@PathVariable Long categoriaId, @RequestBody Categoria categoria){
         Categoria categoriaActualizada = categoriaService.update(categoriaId, categoria);
