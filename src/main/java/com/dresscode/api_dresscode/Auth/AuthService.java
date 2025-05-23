@@ -5,8 +5,8 @@ import com.dresscode.api_dresscode.entities.Usuario;
 import com.dresscode.api_dresscode.repositories.UsuarioRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
-        UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con username: " + request.getUsername()));
         String token = jwtService.getToken(user);
         return AuthResponse.builder()
                 .token(token)
@@ -36,9 +36,9 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         Usuario user = Usuario.builder()
-                .nombreUsuario(request.getName())
+                .username(request.getUsername())
                 .email(request.getEmail())
-                .contrasena(passwordEncoder.encode(request.getPassword()))
+                .password(passwordEncoder.encode(request.getPassword()))
                 .rol(Usuario.Rol.USER)
                 .build();
 

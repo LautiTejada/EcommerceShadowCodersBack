@@ -36,9 +36,9 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
     @Transactional
     public Usuario update(Long id, Usuario usuarioActualizado) {
         Usuario usuarioExistente = findById(id);
-        usuarioExistente.setNombreUsuario(usuarioActualizado.getNombreUsuario());
+        usuarioExistente.setUsername(usuarioActualizado.getUsername());
         usuarioExistente.setEmail(usuarioActualizado.getEmail());
-        usuarioExistente.setContrasena(usuarioActualizado.getContrasena());
+        usuarioExistente.setPassword(usuarioActualizado.getPassword());
         usuarioExistente.setRol(usuarioActualizado.getRol());
         return usuarioRepository.save(usuarioExistente);
     }
