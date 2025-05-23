@@ -41,7 +41,6 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
                 .descripcion(producto.getDescripcion())
                 .color(Color.valueOf(producto.getColor().toUpperCase()))
                 .marca(Marca.valueOf(producto.getMarca().toUpperCase()))
-                .activo(producto.getActivo())
                 .categoria(categoria)
                 .build();
         return productoRepository.save(nuevoProducto);
@@ -111,16 +110,5 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
         return producto.getImagenes();
     }
-
-    public Producto cambiarEstadoProducto (Long productoId) {
-        Producto producto = productoRepository.findById(productoId)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-        producto.setActivo(!producto.getActivo());
-        return productoRepository.save(producto);
-    }
-
-
-
-
 
 }

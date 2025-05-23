@@ -79,11 +79,4 @@ public class ProductoController extends BaseController<Producto, Long> {
         return ResponseEntity.ok(imagenes);
     }
 
-    @PutMapping("/estado/{productoId}")
-    public ResponseEntity<Producto> cambiarEstado(@PathVariable Long productoId) {
-        Producto productoActualizado = productoService.cambiarEstadoProducto(productoId);
-        return ResponseEntity.ok(productoActualizado);
-    }
-
-
 }

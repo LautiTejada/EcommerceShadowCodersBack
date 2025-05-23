@@ -1,6 +1,7 @@
 package com.dresscode.api_dresscode.services;
 
 import com.dresscode.api_dresscode.entities.Base;
+import com.dresscode.api_dresscode.entities.Producto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,5 +54,35 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
         getRepository().deleteById(id);
         return true;
     }
+
+    @Override
+    public E changeStatus(ID id) {
+        E entity = getRepository().findById(id)
+                .orElseThrow(() -> new RuntimeException("Entidad no encontrada con id: " + id));
+
+        entity.setActivo(!entity.getActivo());
+
+        return getRepository().save(entity);
+    }
+
+    @Override
+    public E activate(ID id) {
+        E entity = getRepository().findById(id)
+                .orElseThrow(() -> new RuntimeException("Entidad no encontrada con id: " + id));
+
+        entity.setActivo(true);
+        return getRepository().save(entity);
+    }
+
+    @Override
+    public E deactivate(ID id) {
+        E entity = getRepository().findById(id)
+                .orElseThrow(() -> new RuntimeException("Entidad no encontrada con id: " + id));
+
+        entity.setActivo(false);
+        return getRepository().save(entity);
+    }
+
+
 }
 

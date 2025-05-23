@@ -48,5 +48,25 @@ public abstract class BaseController<E extends Base, ID extends Serializable> {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> changeStatus(@PathVariable ID id) throws Exception {
+        E updatedEntity = service.changeStatus(id);
+        return ResponseEntity.ok(updatedEntity);
+    }
+
+    @PutMapping("/{id}/activate")
+    public ResponseEntity<?> activate(@PathVariable ID id) throws Exception {
+        E entity = service.activate(id);
+        return ResponseEntity.ok(entity);
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<?> deactivate(@PathVariable ID id) throws Exception {
+        E entity = service.deactivate(id);
+        return ResponseEntity.ok(entity);
+    }
+
+
 }
 

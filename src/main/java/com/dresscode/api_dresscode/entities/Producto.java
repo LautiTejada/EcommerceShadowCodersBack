@@ -44,9 +44,6 @@ public class Producto extends Base{
     @Column(name = "marca", nullable = false)
     private Marca marca;
 
-    @Column(name = "activo")
-    private Boolean activo = true;
-
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)
     @JsonBackReference

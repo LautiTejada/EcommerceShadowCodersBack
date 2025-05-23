@@ -19,5 +19,11 @@ public interface BaseService<E extends Base, ID extends Serializable> {
 
     E update(ID id, E entity);
 
+    E changeStatus(ID id);
+
+    E activate(ID id);
+
+    E deactivate(ID id);
+
     boolean delete(ID id);
 }
