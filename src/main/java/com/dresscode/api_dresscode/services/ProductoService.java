@@ -97,6 +97,28 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
         return imagenProductoRepository.save(imagenExistente);
     }
 
+    public Producto eliminarImagenProducto(Long imagenId) {
+        ImagenProducto imagen = imagenProductoRepository.findById(imagenId)
+                .orElseThrow(() -> new RuntimeException("Imagen no encontrada"));
+        Producto producto = imagen.getProducto();
+        producto.getImagenes().remove(imagen);
+        imagenProductoRepository.delete(imagen);
+        return producto;
+    }
+
+    public List<ImagenProducto> getImagenesByProducto(Long productoId) {
+        Producto producto = productoRepository.findById(productoId)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        return producto.getImagenes();
+    }
+
+    public Producto cambiarEstadoProducto (Long productoId) {
+        Producto producto = productoRepository.findById(productoId)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        producto.setActivo(!producto.getActivo());
+        return productoRepository.save(producto);
+    }
+
 
 
 

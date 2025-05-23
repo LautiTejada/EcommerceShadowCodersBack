@@ -24,6 +24,8 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
     @Override
     protected JpaRepository<Usuario, Long> getRepository() {return usuarioRepository;}
 
+
+
     @Override
     public Usuario save(Usuario usuario) {
         if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/productos")
 public class ProductoController extends BaseController<Producto, Long> {
 
@@ -66,5 +66,24 @@ public class ProductoController extends BaseController<Producto, Long> {
         ImagenProducto imagenActualizada = productoService.editarImagenProducto(imagenId, imagenProductoDTO);
         return ResponseEntity.ok(imagenActualizada);
     }
+
+    @DeleteMapping("/imagen/{imagenId}")
+    public ResponseEntity<Producto> eliminarImagen(@PathVariable Long imagenId) {
+        Producto producto = productoService.eliminarImagenProducto(imagenId);
+        return ResponseEntity.ok(producto);
+    }
+
+    @GetMapping("/imagen/{productoId}")
+    public ResponseEntity<List<ImagenProducto>> getImagenes(@PathVariable Long productoId) {
+        List<ImagenProducto> imagenes = productoService.getImagenesByProducto(productoId);
+        return ResponseEntity.ok(imagenes);
+    }
+
+    @PutMapping("/estado/{productoId}")
+    public ResponseEntity<Producto> cambiarEstado(@PathVariable Long productoId) {
+        Producto productoActualizado = productoService.cambiarEstadoProducto(productoId);
+        return ResponseEntity.ok(productoActualizado);
+    }
+
 
 }
