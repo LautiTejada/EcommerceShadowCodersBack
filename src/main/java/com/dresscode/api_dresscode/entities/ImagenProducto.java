@@ -1,7 +1,9 @@
 package com.dresscode.api_dresscode.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +16,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ImagenProducto extends Base {
 
     @Column(name = "url-imagen", nullable = false)
@@ -25,6 +29,6 @@ public class ImagenProducto extends Base {
 
     @ManyToOne
     @JoinColumn(name = "id-producto", nullable = false)
-    @JsonBackReference
+    @JsonIgnore
     private Producto producto;
 }
