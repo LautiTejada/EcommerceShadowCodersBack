@@ -1,7 +1,6 @@
 package com.dresscode.api_dresscode.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,13 +16,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Tipo extends Base{
 
     @Column(nullable = false, name = "nombre-tipo", unique = true)
     private String nombre;
 
-    @OneToMany(mappedBy = "tipo", cascade = CascadeType.ALL)
     @Builder.Default
-    @JsonManagedReference
+    @JsonIgnore
     private List<Categoria> categorias = new ArrayList<>();
 }
