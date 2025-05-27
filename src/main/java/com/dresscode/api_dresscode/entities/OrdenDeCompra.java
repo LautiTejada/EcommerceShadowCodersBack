@@ -2,7 +2,10 @@ package com.dresscode.api_dresscode.entities;
 
 import com.dresscode.api_dresscode.entities.enums.EstadoOrden;
 import com.dresscode.api_dresscode.entities.enums.MetodoPago;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +22,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class OrdenDeCompra extends Base{
 
     @ManyToOne
@@ -45,7 +50,7 @@ public class OrdenDeCompra extends Base{
     private EstadoOrden estadoOrden;
 
     @OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonIgnore
     @Builder.Default
     private List<DetalleOrden> detalles = new ArrayList<>();
 

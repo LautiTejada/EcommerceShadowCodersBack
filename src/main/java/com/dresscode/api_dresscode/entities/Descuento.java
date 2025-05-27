@@ -1,6 +1,9 @@
 package com.dresscode.api_dresscode.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +20,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Descuento extends Base{
     @Column(nullable = false, name = "fecha-inicio")
     private LocalDate fechaInicio;  // Usar LocalDate para fechas
@@ -29,7 +34,7 @@ public class Descuento extends Base{
     private Integer porcentajeDescuento;
 
     @OneToMany(mappedBy = "descuento", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonIgnore
     @Builder.Default
     private List<DescuentoProducto> productos = new ArrayList<>();
 }

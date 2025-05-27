@@ -1,8 +1,7 @@
 package com.dresscode.api_dresscode.entities;
 
 import com.dresscode.api_dresscode.entities.enums.Provincias;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -20,7 +19,9 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Direccion extends Base{
 
     @Column(name = "calle", nullable = false)
@@ -47,7 +48,7 @@ public class Direccion extends Base{
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
-    @JsonBackReference
+    @JsonIgnore
     private Usuario usuario;
 
 }
