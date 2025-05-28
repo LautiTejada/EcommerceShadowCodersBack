@@ -13,6 +13,8 @@ public interface BaseService<E extends Base, ID extends Serializable> {
 
     Page<E> findAll(Pageable pageable);
 
+    List<E> findAllActive();
+
     E findById(ID id);
 
     E save(E entity);

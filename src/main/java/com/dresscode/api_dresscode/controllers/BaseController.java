@@ -27,6 +27,11 @@ public abstract class BaseController<E extends Base, ID extends Serializable> {
         return ResponseEntity.ok(service.findAll(pageable));
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<?> getAllActive() throws  Exception {
+        return ResponseEntity.ok(service.findAllActive());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getOne(@PathVariable ID id) throws Exception {
         return ResponseEntity.ok(service.findById(id));

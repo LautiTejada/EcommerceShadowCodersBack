@@ -28,6 +28,13 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
     }
 
     @Override
+    public List<E> findAllActive() {
+        return getRepository().findAll().stream()
+                .filter(Base::getActivo)
+                .toList();
+    }
+
+    @Override
     public E findById(ID id) {
         return getRepository().findById(id)
                 .orElseThrow(() -> new RuntimeException("Entidad no encontrada con id: " + id));
