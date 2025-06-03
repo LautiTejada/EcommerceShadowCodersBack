@@ -1,5 +1,6 @@
 package com.dresscode.api_dresscode.services;
 import com.dresscode.api_dresscode.entities.Categoria;
+import com.dresscode.api_dresscode.entities.Tipo;
 import com.dresscode.api_dresscode.repositories.CategoriaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,5 +39,33 @@ public class CategoriaService extends BaseServiceImpl<Categoria, Long> {
         }
         categoriaRepository.delete(categoria);
         return true;
+    }
+
+    @Override
+    @Transactional
+    public Categoria changeStatus(Long id) {
+        Categoria categoria = findById(id);
+
+        boolean nuevoEstado = !categoria.getActivo();
+        categoria.setActivo(nuevoEstado);
+
+        if (!nuevoEstado) {
+            categoria.getProductos().forEach(producto -> producto.setActivo(false));
+        }
+
+        return categoriaRepository.save(categoria);
+    }
+
+    @Override
+    @Transactional
+    public Categoria desactivate(Long id) {
+        Categoria categoria = findById(id);
+        if (!categoria.getActivo()) {
+            throw new RuntimeException("La categoria ya está desactivada.");
+        }
+
+        categoria.setActivo(false);
+        categoria.getProductos().forEach(producto -> producto.setActivo(false));
+        return categoriaRepository.save(categoria);
     }
 }

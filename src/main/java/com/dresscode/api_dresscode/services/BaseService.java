@@ -25,7 +25,7 @@ public interface BaseService<E extends Base, ID extends Serializable> {
 
     E activate(ID id);
 
-    E deactivate(ID id);
+    E desactivate(ID id);
 
     boolean delete(ID id);
 }

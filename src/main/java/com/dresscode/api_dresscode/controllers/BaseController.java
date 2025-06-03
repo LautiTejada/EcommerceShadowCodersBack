@@ -68,7 +68,7 @@ public abstract class BaseController<E extends Base, ID extends Serializable> {
 
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<?> deactivate(@PathVariable ID id) throws Exception {
-        E entity = service.deactivate(id);
+        E entity = service.desactivate(id);
         return ResponseEntity.ok(entity);
     }
 

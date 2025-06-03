@@ -37,4 +37,36 @@ public class TipoService extends BaseServiceImpl<Tipo, Long>{
     public List<Categoria> getCategoriasByTipoId(Long tipoId) {
         return categoriaRepository.findByTipoId(tipoId);
     }
+
+    @Override
+    @Transactional
+    public Tipo changeStatus(Long id) {
+        Tipo tipo = findById(id);
+
+        boolean nuevoEstado = !tipo.getActivo();
+        tipo.setActivo(nuevoEstado);
+
+
+        if (!nuevoEstado) {
+            tipo.getCategorias().forEach(categoria -> {
+                categoria.setActivo(false);
+                categoria.getProductos().forEach(producto -> producto.setActivo(false));
+            });
+        }
+
+        return tipoRepository.save(tipo);
+    }
+
+    @Override
+    @Transactional
+    public Tipo desactivate(Long id) {
+        Tipo tipo = findById(id);
+        if (!tipo.getActivo()) {
+            throw new RuntimeException("El tipo ya está desactivado.");
+        }
+
+        tipo.setActivo(false);
+        tipo.getCategorias().forEach(categoria -> categoria.setActivo(false));
+        return tipoRepository.save(tipo);
+    }
 }

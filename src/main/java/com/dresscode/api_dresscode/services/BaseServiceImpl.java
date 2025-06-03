@@ -82,7 +82,7 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
     }
 
     @Override
-    public E deactivate(ID id) {
+    public E desactivate(ID id) {
         E entity = getRepository().findById(id)
                 .orElseThrow(() -> new RuntimeException("Entidad no encontrada con id: " + id));
 
