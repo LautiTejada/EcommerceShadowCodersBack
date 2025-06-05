@@ -24,10 +24,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests( authRequest ->
+                .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/auth/**").permitAll()
-                                .anyRequest().authenticated()
+                                .requestMatchers("/auth/**").permitAll() // Rutas públicas para autenticación
+                                .requestMatchers("/api/ordenes-de-compra/**", "/api/detalles-orden/**").authenticated() // Rutas protegidas
+                                .anyRequest().permitAll() // Permitir acceso público a otras rutas
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider)
