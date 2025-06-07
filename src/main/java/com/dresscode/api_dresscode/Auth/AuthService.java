@@ -25,9 +25,9 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
-        UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con username: " + request.getUsername()));
+        UserDetails user = userRepository.findByUsername(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con username: " + request.getEmail()));
         String token = jwtService.getToken(user);
         return AuthResponse.builder()
                 .token(token)
