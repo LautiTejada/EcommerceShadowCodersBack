@@ -46,7 +46,6 @@ public class Producto extends Base{
 
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)
-    @JsonBackReference
     private Categoria categoria;
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
