@@ -27,11 +27,12 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
-        UserDetails user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + request.getEmail()));
+        Usuario user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + request.getEmail()));
         String token = jwtService.getToken(user);
         return AuthResponse.builder()
                 .token(token)
                 .username(user.getUsername())
+                .id(user.getId())
                 .build();
     }
 

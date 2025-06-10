@@ -23,11 +23,6 @@ public class UsuarioController extends BaseController<Usuario, Long>{
         this.usuarioService = usuarioService;
     }
 
-    @PutMapping("/{usuarioId}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long usuarioId, @Valid @RequestBody Usuario usuarioActualizado) {
-        Usuario usuario = usuarioService.update(usuarioId, usuarioActualizado);
-        return ResponseEntity.ok(usuario);
-    }
 
 
     @PostMapping("/{usuarioId}/direcciones")
