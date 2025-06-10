@@ -7,6 +7,7 @@ import com.dresscode.api_dresscode.repositories.DireccionRepository;
 import com.dresscode.api_dresscode.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
     private final UsuarioRepository usuarioRepository;
     private final DireccionRepository direccionRepository;
     private final DireccionService direccionService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     protected JpaRepository<Usuario, Long> getRepository() {return usuarioRepository;}
@@ -40,7 +42,17 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
         Usuario usuarioExistente = findById(id);
         usuarioExistente.setUsername(usuarioActualizado.getUsername());
         usuarioExistente.setEmail(usuarioActualizado.getEmail());
-        usuarioExistente.setPassword(usuarioActualizado.getPassword());
+        String nuevaPassword = usuarioActualizado.getPassword();
+        if (nuevaPassword != null && !nuevaPassword.isBlank() &&
+                !nuevaPassword.equals(usuarioExistente.getPassword())) {
+            // Si la nueva contraseña no está hasheada, la hasheamos
+            if (!nuevaPassword.startsWith("$2a$")) {
+                usuarioExistente.setPassword(passwordEncoder.encode(nuevaPassword));
+            } else {
+                usuarioExistente.setPassword(nuevaPassword);
+            }
+        }
+
         usuarioExistente.setRol(usuarioActualizado.getRol());
         return usuarioRepository.save(usuarioExistente);
     }
