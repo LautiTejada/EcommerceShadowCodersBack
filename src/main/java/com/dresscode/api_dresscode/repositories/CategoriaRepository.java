@@ -10,4 +10,5 @@ import java.util.List;
 public interface CategoriaRepository extends BaseRepository<Categoria, Long> {
 
     List<Categoria> findByTipoId(Long tipoId);
+    List<Categoria> findByTipoIdIn(List<Long> tipoIds);
 }
