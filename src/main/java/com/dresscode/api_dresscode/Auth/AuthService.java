@@ -27,7 +27,9 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
+
         Usuario user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + request.getEmail()));
+
         String token = jwtService.getToken(user);
         return AuthResponse.builder()
                 .token(token)
@@ -47,6 +49,7 @@ public class AuthService {
         userRepository.save(user);
         return AuthResponse.builder()
                 .token(jwtService.getToken(user))
+                .id(user.getId())
                 .build();
     }
 }
