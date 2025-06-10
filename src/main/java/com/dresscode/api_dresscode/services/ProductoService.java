@@ -111,4 +111,23 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
         return producto.getImagenes();
     }
 
+    public List<Producto> filtrarProductos(List<Long> tipoIds, List<Long> categoriaIds, List<Marca> marcas, Integer precioMin, Integer precioMax) {
+        if (tipoIds != null && !tipoIds.isEmpty()) {
+            List<Long> categoriasPorTipo = new java.util.ArrayList<>(
+                    categoriaRepository.findByTipoIdIn(tipoIds)
+                            .stream()
+                            .map(Categoria::getId)
+                            .toList()
+            );
+            if (categoriaIds != null && !categoriaIds.isEmpty()) {
+                categoriasPorTipo.addAll(categoriaIds);
+            }
+            categoriaIds = categoriasPorTipo;
+        }
+        if (categoriaIds != null && categoriaIds.isEmpty()) {
+            categoriaIds = null;
+        }
+        return productoRepository.filtrarProductos(categoriaIds, marcas, precioMin, precioMax);
+    }
+
 }

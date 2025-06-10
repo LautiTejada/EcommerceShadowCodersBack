@@ -4,6 +4,7 @@ import com.dresscode.api_dresscode.dtos.ImagenProductoDTO;
 import com.dresscode.api_dresscode.dtos.ProductoDTO;
 import com.dresscode.api_dresscode.entities.ImagenProducto;
 import com.dresscode.api_dresscode.entities.Producto;
+import com.dresscode.api_dresscode.entities.enums.Marca;
 import com.dresscode.api_dresscode.services.ProductoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,17 @@ public class ProductoController extends BaseController<Producto, Long> {
     }
 
 
+    @GetMapping("/filtrar")
+    public ResponseEntity<List<Producto>> filtrarProductos(
+            @RequestParam(required = false) List<Long> tipoIds,
+            @RequestParam(required = false) List<Long> categoriaIds,
+            @RequestParam(required = false) List<Marca> marcas,
+            @RequestParam(required = false) Integer precioMin,
+            @RequestParam(required = false) Integer precioMax
+    ) {
+        List<Producto> productos = productoService.filtrarProductos(tipoIds, categoriaIds, marcas, precioMin, precioMax);
+        return ResponseEntity.ok(productos);
+    }
 
     @PostMapping("/{categoriaId}")
     public ResponseEntity<Producto> crearProducto(@Valid @RequestBody ProductoDTO producto, @PathVariable Long categoriaId){
