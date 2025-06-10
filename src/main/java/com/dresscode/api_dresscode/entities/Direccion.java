@@ -48,7 +48,6 @@ public class Direccion extends Base{
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
-    @JsonIgnore
     private Usuario usuario;
 
 }

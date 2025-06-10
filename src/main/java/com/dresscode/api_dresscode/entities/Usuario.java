@@ -1,6 +1,8 @@
 package com.dresscode.api_dresscode.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +20,9 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public  class Usuario extends Base implements UserDetails {
 
     @Column(nullable = false, name = "username", length = 100)
@@ -40,7 +45,6 @@ public  class Usuario extends Base implements UserDetails {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    @JsonManagedReference
     private List<Direccion> direcciones= new ArrayList<>();
 
     @Override
