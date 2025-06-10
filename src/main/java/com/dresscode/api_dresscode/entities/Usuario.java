@@ -1,8 +1,6 @@
 package com.dresscode.api_dresscode.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,10 +18,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
-public  class Usuario extends Base implements UserDetails {
+public class Usuario extends Base implements UserDetails {
 
     @Column(nullable = false, name = "username", length = 100)
     private String username;
@@ -42,16 +37,15 @@ public  class Usuario extends Base implements UserDetails {
         USER
     }
 
-
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
     @Builder.Default
-    private List<Direccion> direcciones= new ArrayList<>();
+    private List<Direccion> direcciones = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(rol.name()));
     }
-
 
     @Override
     public boolean isAccountNonExpired() {
@@ -72,6 +66,4 @@ public  class Usuario extends Base implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
 }
