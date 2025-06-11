@@ -47,21 +47,19 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
 
     }
 
-    public Producto updateProducto(Long id, Producto productoActualizado) {
+    public Producto updateProducto(Long id, ProductoDTO productoActualizado) {
         Producto productoExistente = findById(id);
 
         productoExistente.setNombre(productoActualizado.getNombre());
         productoExistente.setPrecio(productoActualizado.getPrecio());
         productoExistente.setDescripcion(productoActualizado.getDescripcion());
-        productoExistente.setColor(productoActualizado.getColor());
-        productoExistente.setMarca(productoActualizado.getMarca());
+        productoExistente.setColor(Color.valueOf(productoActualizado.getColor().toUpperCase()));
+        productoExistente.setMarca(Marca.valueOf(productoActualizado.getMarca().toUpperCase()));
         productoExistente.setActivo(productoActualizado.getActivo());
 
-        if (!productoExistente.getCategoria().getId().equals(productoActualizado.getCategoria().getId())) {
-            Categoria nuevaCategoria = categoriaRepository.findById(productoActualizado.getCategoria().getId())
-                    .orElseThrow(() -> new RuntimeException("Categoría no encontrada con id: " + productoActualizado.getCategoria().getId()));
-            productoExistente.setCategoria(nuevaCategoria);
-        }
+        // Mantener descuentos y talles previos
+        productoExistente.setDescuentos(productoExistente.getDescuentos());
+        productoExistente.setTalles(productoExistente.getTalles());
 
         return productoRepository.save(productoExistente);
     }
