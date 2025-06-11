@@ -29,6 +29,6 @@ public class ImagenProducto extends Base {
 
     @ManyToOne
     @JoinColumn(name = "id-producto", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Producto producto;
 }
