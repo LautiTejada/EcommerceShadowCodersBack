@@ -44,8 +44,9 @@ public class ProductoController extends BaseController<Producto, Long> {
         return ResponseEntity.status(201).body(nuevoProducto);
     }
 
-    @PutMapping("/{productoId}")
-    public ResponseEntity<Producto> editarProducto(@PathVariable Long productoId, @Valid @RequestBody Producto producto){
+
+    @PutMapping("/{productoId}/editar")
+    public ResponseEntity<Producto> editarProducto(@PathVariable Long productoId, @Valid @RequestBody ProductoDTO producto) {
         Producto nuevoProducto = productoService.updateProducto(productoId, producto);
         return ResponseEntity.ok(nuevoProducto);
     }
