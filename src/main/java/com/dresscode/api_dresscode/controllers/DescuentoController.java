@@ -22,14 +22,6 @@ public class DescuentoController extends BaseController<Descuento, Long> {
     }
 
 
-
-    @PutMapping("/{descuentoId}")
-    public ResponseEntity<Descuento> actualizarDescuento(@PathVariable Long descuentoId, @RequestBody Descuento descuento){
-        Descuento descuentoActualizado = descuentoService.update(descuentoId, descuento);
-        return ResponseEntity.ok(descuentoActualizado);
-    }
-
-
     @PostMapping("/{descuentoId}/productos/{idProducto}")
     public ResponseEntity<Descuento> agregarProductoADescuento(@PathVariable Long descuentoId, @PathVariable Long idProducto){
        descuentoService.agregarProductoADescuento(descuentoId, idProducto);
