@@ -26,5 +26,6 @@ public class Tipo extends Base{
 
     @OneToMany(mappedBy = "tipo", cascade = CascadeType.ALL)
     @Builder.Default
+    @JsonIgnore
     private List<Categoria> categorias = new ArrayList<>();
 }

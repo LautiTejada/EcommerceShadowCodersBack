@@ -30,6 +30,7 @@ public class Categoria extends Base{
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @JsonIgnore
     private List<Producto> productos = new ArrayList<>();
 
 }
