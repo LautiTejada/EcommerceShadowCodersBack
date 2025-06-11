@@ -1,7 +1,10 @@
 package com.dresscode.api_dresscode.services;
+import com.dresscode.api_dresscode.controllers.TipoController;
+import com.dresscode.api_dresscode.dtos.CategoriaDTO;
 import com.dresscode.api_dresscode.entities.Categoria;
 import com.dresscode.api_dresscode.entities.Tipo;
 import com.dresscode.api_dresscode.repositories.CategoriaRepository;
+import com.dresscode.api_dresscode.repositories.TipoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -12,14 +15,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoriaService extends BaseServiceImpl<Categoria, Long> {
 
     private final CategoriaRepository categoriaRepository;
-    private final TipoService tipoService;
+    private final TipoRepository tipoRepository;
 
     @Override
     protected JpaRepository<Categoria, Long> getRepository() {
         return categoriaRepository;
     }
 
+    public Categoria createCategoria(CategoriaDTO categoria, Long tipoId) {
+        Tipo tipo = tipoRepository.findById(tipoId)
+                .orElseThrow(()-> new RuntimeException("Tipo no encontrado con el id: "+ tipoId));
 
+        Categoria categoriaNueva =  Categoria.builder()
+                .nombreCategoria(categoria.getNombreCategoria())
+                .tipo(tipo)
+                .build();
+                return categoriaRepository.save(categoriaNueva);
+    }
 
     @Override
     @Transactional
