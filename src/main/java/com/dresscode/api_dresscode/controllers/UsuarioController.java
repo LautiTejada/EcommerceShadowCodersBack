@@ -49,6 +49,13 @@ public class UsuarioController extends BaseController<Usuario, Long>{
         Direccion direccionEditada = usuarioService.editarDireccionDeUsuario(usuarioId, direccionId, direccionActualizada);
         return ResponseEntity.ok(direccionEditada);
     }
+    @PutMapping("/{usuarioId}/direcciones/{direccionId}/desactivar")
+    public ResponseEntity<?> desactivarDireccionDeUsuario(
+            @PathVariable Long usuarioId,
+            @PathVariable Long direccionId) {
+        usuarioService.desactivarDireccion(usuarioId, direccionId);
+        return ResponseEntity.ok().build();
+    }
 
 
 

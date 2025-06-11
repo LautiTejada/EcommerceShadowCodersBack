@@ -92,5 +92,20 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
 
         return direccionRepository.save(direccion);
     }
+    @Transactional
+    public void desactivarDireccion(Long usuarioId, Long direccionId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Direccion direccion = direccionRepository.findById(direccionId)
+                .orElseThrow(() -> new RuntimeException("Dirección no encontrada"));
+
+        if (!usuario.getDirecciones().contains(direccion)) {
+            throw new RuntimeException("La dirección no pertenece al usuario");
+        }
+
+        direccion.setActivo(false);
+        direccionRepository.save(direccion);
+    }
 
 }
