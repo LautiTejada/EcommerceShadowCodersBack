@@ -22,6 +22,12 @@ public class CategoriaController extends BaseController<Categoria, Long> {
         this.categoriaService = categoriaService;
     }
 
+    @PostMapping("/{tipoId}")
+    public ResponseEntity<Categoria> crearCategoria(@Valid @RequestBody CategoriaDTO categoria, @PathVariable Long tipoId){
+        Categoria nuevaCategoria = categoriaService.createCategoria(categoria, tipoId);
+        return ResponseEntity.status(201).body(nuevaCategoria);
+    }
+
 
     @PutMapping("/{categoriaId}")
     public ResponseEntity<Categoria> editarCategoria(@PathVariable Long categoriaId, @RequestBody Categoria categoria){
