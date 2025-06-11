@@ -31,7 +31,6 @@ public class ImagenProductoController extends BaseController<ImagenProducto, Lon
         List<ImagenProducto> imagenes = imagenProductoService.getImagenesByProductoId(productoId);
         return ResponseEntity.ok(imagenes);
     }
-
     @PostMapping("/upload")
     public ResponseEntity<ImagenProducto> uploadImagen(
             @RequestParam("productoId") Long productoId,
@@ -48,6 +47,9 @@ public class ImagenProductoController extends BaseController<ImagenProducto, Lon
         ImagenProducto imagenProducto = new ImagenProducto();
         imagenProducto.setProducto(producto);
         imagenProducto.setUrlImagen("/uploads/" + fileName); // Guarda la URL relativa
+
+        // ASIGNA UN VALOR POR DEFECTO A 'principal'
+        imagenProducto.setPrincipal(false); // o true si es la primera imagen
 
         imagenProductoService.save(imagenProducto);
 
