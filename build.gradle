@@ -40,6 +40,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	implementation 'org.hibernate.orm:hibernate-envers:6.4.4.Final'
+	implementation("com.mercadopago:sdk-java:2.4.0")
 
 
 
