@@ -35,7 +35,9 @@ public class ImagenProductoController extends BaseController<ImagenProducto, Lon
     @PostMapping("/upload")
     public ResponseEntity<ImagenProducto> uploadImagen(
             @RequestParam("productoId") Long productoId,
-            @RequestParam("image") MultipartFile file) throws IOException {
+            @RequestParam("image") MultipartFile file,
+            @RequestParam("principal") boolean principal // <-- agrega esto
+    ) throws IOException {
 
         // Guardar archivo en disco
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -48,6 +50,9 @@ public class ImagenProductoController extends BaseController<ImagenProducto, Lon
         ImagenProducto imagenProducto = new ImagenProducto();
         imagenProducto.setProducto(producto);
         imagenProducto.setUrlImagen("/uploads/" + fileName); // Guarda la URL relativa
+
+        // ASIGNA UN VALOR POR DEFECTO A 'principal'
+        imagenProducto.setPrincipal(principal); // o true si es la primera imagen
 
         imagenProductoService.save(imagenProducto);
 
