@@ -33,12 +33,17 @@ public class CategoriaService extends BaseServiceImpl<Categoria, Long> {
                 return categoriaRepository.save(categoriaNueva);
     }
 
-    @Override
+
     @Transactional
-    public Categoria update(Long id, Categoria categoriaActualizada) {
+    public Categoria updateCategoria(Long id, CategoriaDTO categoriaActualizada, Long tipoId) {
+
+        Tipo tipo = tipoRepository.findById(tipoId)
+                .orElseThrow(()-> new RuntimeException("Tipo no encontrado con el id: "+ tipoId));
+
         Categoria categoriaExistente = findById(id);
         categoriaExistente.setNombreCategoria(categoriaActualizada.getNombreCategoria());
-        categoriaExistente.setTipo(categoriaActualizada.getTipo());
+        categoriaExistente.setTipo(tipo);
+        categoriaExistente.setProductos(categoriaExistente.getProductos());
         return categoriaRepository.save(categoriaExistente);
     }
 

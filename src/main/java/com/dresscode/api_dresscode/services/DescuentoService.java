@@ -42,9 +42,8 @@ public class DescuentoService extends BaseServiceImpl<Descuento, Long>{
         return descuentoRepository.save(descuento);
     }
 
-    @Override
     @Transactional
-    public Descuento update(Long id, Descuento datosActualizados) {
+    public Descuento updateDescuento(Long id, DescuentoDTO datosActualizados) {
         Descuento descuentoExistente = findById(id);
 
         if (datosActualizados.getFechaCierre().isBefore(datosActualizados.getFechaInicio())) {
@@ -54,6 +53,7 @@ public class DescuentoService extends BaseServiceImpl<Descuento, Long>{
         descuentoExistente.setFechaInicio(datosActualizados.getFechaInicio());
         descuentoExistente.setFechaCierre(datosActualizados.getFechaCierre());
         descuentoExistente.setPorcentajeDescuento(datosActualizados.getPorcentajeDescuento());
+        descuentoExistente.setProductos(descuentoExistente.getProductos());
 
         return descuentoRepository.save(descuentoExistente);
     }
