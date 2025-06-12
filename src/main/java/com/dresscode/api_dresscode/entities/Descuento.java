@@ -34,7 +34,7 @@ public class Descuento extends Base{
     private Integer porcentajeDescuento;
 
     @OneToMany(mappedBy = "descuento", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+
     @Builder.Default
     private List<DescuentoProducto> productos = new ArrayList<>();
 }
