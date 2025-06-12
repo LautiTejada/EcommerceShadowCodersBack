@@ -26,6 +26,22 @@ public class DescuentoService extends BaseServiceImpl<Descuento, Long>{
     @Override
     protected JpaRepository<Descuento, Long> getRepository() {return descuentoRepository;}
 
+
+    @Transactional
+    public Descuento add(DescuentoDTO descuentoDTO) {
+        if (descuentoDTO.getFechaCierre().isBefore(descuentoDTO.getFechaInicio())) {
+            throw new RuntimeException("La fecha de cierre no puede ser anterior a la fecha de inicio.");
+        }
+
+        Descuento descuento = Descuento.builder()
+                .fechaInicio(descuentoDTO.getFechaInicio())
+                .fechaCierre(descuentoDTO.getFechaCierre())
+                .porcentajeDescuento(descuentoDTO.getPorcentajeDescuento())
+                .build();
+
+        return descuentoRepository.save(descuento);
+    }
+
     @Override
     @Transactional
     public Descuento update(Long id, Descuento datosActualizados) {
@@ -40,6 +56,14 @@ public class DescuentoService extends BaseServiceImpl<Descuento, Long>{
         descuentoExistente.setPorcentajeDescuento(datosActualizados.getPorcentajeDescuento());
 
         return descuentoRepository.save(descuentoExistente);
+    }
+
+    @Transactional
+    public List<Producto> getProductosDeDescuento(Long descuentoId) {
+        Descuento descuento = findById(descuentoId);
+        return descuento.getProductos().stream()
+                .map(DescuentoProducto::getProducto)
+                .toList();
     }
 
 

@@ -2,6 +2,7 @@ package com.dresscode.api_dresscode.controllers;
 
 import com.dresscode.api_dresscode.dtos.DescuentoDTO;
 import com.dresscode.api_dresscode.entities.Descuento;
+import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.services.DescuentoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,18 @@ public class DescuentoController extends BaseController<Descuento, Long> {
     public DescuentoController(DescuentoService descuentoService){
         super(descuentoService);
         this.descuentoService = descuentoService;
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<Descuento> save(@RequestBody DescuentoDTO descuentoDTO) {
+        Descuento nuevoDescuento = descuentoService.add(descuentoDTO);
+        return ResponseEntity.ok(nuevoDescuento);
+    }
+
+    @GetMapping("/{descuentoId}/productos")
+    public ResponseEntity<List<Producto>> getProductosDeDescuento(@PathVariable Long descuentoId) {
+        List<Producto> productos = descuentoService.getProductosDeDescuento(descuentoId);
+        return ResponseEntity.ok(productos);
     }
 
 
