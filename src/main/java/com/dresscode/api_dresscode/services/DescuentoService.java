@@ -74,6 +74,13 @@ public class DescuentoService extends BaseServiceImpl<Descuento, Long>{
         Producto producto = productoRepository.findById(idProducto)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
+
+        boolean yaExiste = descuento.getProductos().stream()
+                .anyMatch(dp -> dp.getProducto().getId().equals(idProducto));
+        if (yaExiste) {
+            throw new IllegalArgumentException("El producto ya tiene este descuento");
+        }
+
         DescuentoProducto dp = DescuentoProducto.builder()
                 .descuento(descuento)
                 .producto(producto)
