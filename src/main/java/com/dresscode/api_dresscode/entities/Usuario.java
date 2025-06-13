@@ -56,6 +56,10 @@ public class Usuario extends Base implements UserDetails {
     public boolean isAccountNonLocked() {
         return true;
     }
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
 
     @Override
     public boolean isCredentialsNonExpired() {
