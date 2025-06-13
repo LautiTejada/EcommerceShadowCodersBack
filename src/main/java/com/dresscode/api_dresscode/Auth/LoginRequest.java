@@ -12,8 +12,8 @@ import org.hibernate.validator.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {
-    @NotBlank(message = "El email es obligatorio")
-    String email;
+    @NotBlank(message = "El username es obligatorio")
+    String username;
 
     @NotBlank(message = "La contraseña es obligatoria")
     String password;
