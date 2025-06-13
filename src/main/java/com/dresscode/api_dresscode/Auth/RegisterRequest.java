@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.dresscode.api_dresscode.entities.Usuario;
 
 @Data
 @Builder
@@ -13,4 +14,6 @@ public class RegisterRequest {
     String username;
     String password;
     String email;
+    private Usuario.Rol rol;
+
 }

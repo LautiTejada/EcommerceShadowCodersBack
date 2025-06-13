@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.dresscode.api_dresscode.entities.Usuario.Rol;
 
 
 
@@ -40,11 +41,15 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
+        Usuario.Rol rol = request.getRol() != null ? request.getRol() : Usuario.Rol.USER;
+        if (rol != Usuario.Rol.USER && rol != Usuario.Rol.ADMIN) {
+            throw new RuntimeException("Rol inválido");
+        }
         Usuario user = Usuario.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .rol(Usuario.Rol.USER)
+                .rol(rol)
                 .build();
 
         userRepository.save(user);
