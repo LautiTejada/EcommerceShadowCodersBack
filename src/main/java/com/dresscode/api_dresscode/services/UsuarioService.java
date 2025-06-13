@@ -33,6 +33,10 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
         if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
             throw new RuntimeException("El email ya está en uso.");
         }
+        if (usuario.getRol() == null ||
+                (!usuario.getRol().equals(Usuario.Rol.ADMIN) && !usuario.getRol().equals(Usuario.Rol.USER))) {
+            throw new RuntimeException("Rol inválido. Debe ser ADMIN o USER.");
+        }
         return usuarioRepository.save(usuario);
     }
 
