@@ -50,6 +50,8 @@ public class ProductoTalleService extends BaseServiceImpl<ProductoTalle, Long> {
                 .orElseThrow(() -> new RuntimeException("ProductoTalle no encontrado"));
 
         productoTalle.setCantidad(nuevaCantidad);
+        productoTalle.setProducto(productoTalle.getProducto());
+        productoTalle.setTalle(productoTalle.getTalle());
         return productoTalleRepository.save(productoTalle);
     }
 
