@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class DescuentoProducto extends Base{
     @ManyToOne
     @JoinColumn(name = "descuento_id", nullable = false)
-    @JsonBackReference
+    @JsonManagedReference // <-- Cambia esto
     private Descuento descuento;
 
     @ManyToOne
