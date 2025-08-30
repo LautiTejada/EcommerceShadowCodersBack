@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Talle extends Base{
-    @Column(name = "tipo-talle", nullable = false)
+    @Column(name = "tipo_talle", nullable = false)
     private String tipoTalle;
 
     @OneToMany(mappedBy = "talle", cascade = CascadeType.ALL)

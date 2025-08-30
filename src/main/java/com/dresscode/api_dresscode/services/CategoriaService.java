@@ -1,6 +1,5 @@
 package com.dresscode.api_dresscode.services;
-import com.dresscode.api_dresscode.controllers.TipoController;
-import com.dresscode.api_dresscode.dtos.CategoriaDTO;
+import com.dresscode.api_dresscode.dtos.CatergoriaDtos.CategoriaDTO;
 import com.dresscode.api_dresscode.entities.Categoria;
 import com.dresscode.api_dresscode.entities.Tipo;
 import com.dresscode.api_dresscode.repositories.CategoriaRepository;

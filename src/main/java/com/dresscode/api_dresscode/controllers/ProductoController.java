@@ -4,12 +4,9 @@ import com.dresscode.api_dresscode.dtos.ImagenProductoDTO;
 import com.dresscode.api_dresscode.dtos.ProductoDTO;
 import com.dresscode.api_dresscode.entities.ImagenProducto;
 import com.dresscode.api_dresscode.entities.Producto;
-import com.dresscode.api_dresscode.entities.enums.Marca;
 import com.dresscode.api_dresscode.services.ProductoService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,17 +23,17 @@ public class ProductoController extends BaseController<Producto, Long> {
     }
 
 
-    @GetMapping("/filtrar")
-    public ResponseEntity<List<Producto>> filtrarProductos(
-            @RequestParam(required = false) List<Long> tipoIds,
-            @RequestParam(required = false) List<Long> categoriaIds,
-            @RequestParam(required = false) List<Marca> marcas,
-            @RequestParam(required = false) Integer precioMin,
-            @RequestParam(required = false) Integer precioMax
-    ) {
-        List<Producto> productos = productoService.filtrarProductos(tipoIds, categoriaIds, marcas, precioMin, precioMax);
-        return ResponseEntity.ok(productos);
-    }
+//    @GetMapping("/filtrar")
+//    public ResponseEntity<List<Producto>> filtrarProductos(
+//            @RequestParam(required = false) List<Long> tipoIds,
+//            @RequestParam(required = false) List<Long> categoriaIds,
+//            @RequestParam(required = false) List<Marca> marcas,
+//            @RequestParam(required = false) Integer precioMin,
+//            @RequestParam(required = false) Integer precioMax
+//    ) {
+//        List<Producto> productos = productoService.filtrarProductos(tipoIds, categoriaIds, marcas, precioMin, precioMax);
+//        return ResponseEntity.ok(productos);
+//    }
 
     @PostMapping("/{categoriaId}")
     public ResponseEntity<Producto> crearProducto(@Valid @RequestBody ProductoDTO producto, @PathVariable Long categoriaId){
@@ -45,11 +42,11 @@ public class ProductoController extends BaseController<Producto, Long> {
     }
 
 
-    @PutMapping("/{productoId}/editar")
-    public ResponseEntity<Producto> editarProducto(@PathVariable Long productoId, @Valid @RequestBody ProductoDTO producto) {
-        Producto nuevoProducto = productoService.updateProducto(productoId, producto);
-        return ResponseEntity.ok(nuevoProducto);
-    }
+//    @PutMapping("/{productoId}/editar")
+//    public ResponseEntity<Producto> editarProducto(@PathVariable Long productoId, @Valid @RequestBody ProductoDTO producto) {
+//        Producto nuevoProducto = productoService.updateProducto(productoId, producto);
+//        return ResponseEntity.ok(nuevoProducto);
+//    }
 
 
     @PutMapping("/{productoId}/cambiar-etado")

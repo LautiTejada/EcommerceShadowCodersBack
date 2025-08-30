@@ -1,11 +1,8 @@
 package com.dresscode.api_dresscode.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,14 +14,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class DescuentoProducto extends Base{
     @ManyToOne
     @JoinColumn(name = "descuento_id", nullable = false)
-    @JsonManagedReference // <-- Cambia esto
     private Descuento descuento;
 
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
-    @JsonBackReference
     private Producto producto;
+
+    @Column(name = "precio_descuento", nullable = false)
+    @Builder.Default
+    private double precioDescuento = producto.getPrecio() * (1 - descuento.getPorcentajeDescuento() / 100);
 }

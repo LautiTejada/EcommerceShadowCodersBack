@@ -21,14 +21,10 @@ import lombok.NoArgsConstructor;
         property = "id")
 public class ImagenProducto extends Base {
 
-    @Column(name = "url-imagen", nullable = false)
+    @Column(name = "url_imagen", nullable = false)
     private String urlImagen;
 
-    @Column(name = "principal", nullable = false)
-    private Boolean principal;
-
     @ManyToOne
-    @JoinColumn(name = "id-producto", nullable = false)
-    @JsonIgnore
+    @JoinColumn(name = "id_producto", nullable = false)
     private Producto producto;
 }

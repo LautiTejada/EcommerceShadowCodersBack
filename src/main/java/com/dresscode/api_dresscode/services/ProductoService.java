@@ -4,9 +4,8 @@ import com.dresscode.api_dresscode.dtos.ImagenProductoDTO;
 import com.dresscode.api_dresscode.dtos.ProductoDTO;
 import com.dresscode.api_dresscode.entities.Categoria;
 import com.dresscode.api_dresscode.entities.ImagenProducto;
+import com.dresscode.api_dresscode.entities.Marca;
 import com.dresscode.api_dresscode.entities.Producto;
-import com.dresscode.api_dresscode.entities.enums.Color;
-import com.dresscode.api_dresscode.entities.enums.Marca;
 import com.dresscode.api_dresscode.repositories.CategoriaRepository;
 import com.dresscode.api_dresscode.repositories.ImagenProductoRepository;
 import com.dresscode.api_dresscode.repositories.ProductoRepository;
@@ -39,30 +38,30 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
                 .nombre(producto.getNombre())
                 .precio(producto.getPrecio())
                 .descripcion(producto.getDescripcion())
-                .color(Color.valueOf(producto.getColor().toUpperCase()))
-                .marca(Marca.valueOf(producto.getMarca().toUpperCase()))
+//                .color(Color.valueOf(producto.getColor().toUpperCase()))
+//                .marca(Marca.valueOf(producto.getMarca().toUpperCase()))
                 .categoria(categoria)
                 .build();
         return productoRepository.save(nuevoProducto);
 
     }
 
-    public Producto updateProducto(Long id, ProductoDTO productoActualizado) {
-        Producto productoExistente = findById(id);
-
-        productoExistente.setNombre(productoActualizado.getNombre());
-        productoExistente.setPrecio(productoActualizado.getPrecio());
-        productoExistente.setDescripcion(productoActualizado.getDescripcion());
-        productoExistente.setColor(Color.valueOf(productoActualizado.getColor().toUpperCase()));
-        productoExistente.setMarca(Marca.valueOf(productoActualizado.getMarca().toUpperCase()));
-        productoExistente.setActivo(productoActualizado.getActivo());
-
-        // Mantener descuentos y talles previos
-        productoExistente.setDescuentos(productoExistente.getDescuentos());
-        productoExistente.setTalles(productoExistente.getTalles());
-
-        return productoRepository.save(productoExistente);
-    }
+//    public Producto updateProducto(Long id, ProductoDTO productoActualizado) {
+//        Producto productoExistente = findById(id);
+//
+//        productoExistente.setNombre(productoActualizado.getNombre());
+//        productoExistente.setPrecio(productoActualizado.getPrecio());
+//        productoExistente.setDescripcion(productoActualizado.getDescripcion());
+//        productoExistente.setColor(Color.valueOf(productoActualizado.getColor().toUpperCase()));
+//        productoExistente.setMarca(Marca.valueOf(productoActualizado.getMarca().toUpperCase()));
+//        productoExistente.setActivo(productoActualizado.getActivo());
+//
+//        // Mantener descuentos y talles previos
+//        productoExistente.setDescuentos(productoExistente.getDescuentos());
+//        productoExistente.setTalles(productoExistente.getTalles());
+//
+//        return productoRepository.save(productoExistente);
+//    }
 
 
     public Producto cambiarEstadoProducto(Long id, Boolean nuevoEstado) {
@@ -89,7 +88,6 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
                 .orElseThrow(() -> new RuntimeException("Imagen no encontrada"));
 
         imagenExistente.setUrlImagen(imagenDTO.getUrlImagen());
-        imagenExistente.setPrincipal(imagenDTO.getPrincipal());
 
         return imagenProductoRepository.save(imagenExistente);
     }
@@ -109,23 +107,23 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
         return producto.getImagenes();
     }
 
-    public List<Producto> filtrarProductos(List<Long> tipoIds, List<Long> categoriaIds, List<Marca> marcas, Integer precioMin, Integer precioMax) {
-        if (tipoIds != null && !tipoIds.isEmpty()) {
-            List<Long> categoriasPorTipo = new java.util.ArrayList<>(
-                    categoriaRepository.findByTipoIdIn(tipoIds)
-                            .stream()
-                            .map(Categoria::getId)
-                            .toList()
-            );
-            if (categoriaIds != null && !categoriaIds.isEmpty()) {
-                categoriasPorTipo.addAll(categoriaIds);
-            }
-            categoriaIds = categoriasPorTipo;
-        }
-        if (categoriaIds != null && categoriaIds.isEmpty()) {
-            categoriaIds = null;
-        }
-        return productoRepository.filtrarProductos(categoriaIds, marcas, precioMin, precioMax);
-    }
+//    public List<Producto> filtrarProductos(List<Long> tipoIds, List<Long> categoriaIds, Marca marcas, Integer precioMin, Integer precioMax) {
+//        if (tipoIds != null && !tipoIds.isEmpty()) {
+//            List<Long> categoriasPorTipo = new java.util.ArrayList<>(
+//                    categoriaRepository.findByTipoIdIn(tipoIds)
+//                            .stream()
+//                            .map(Categoria::getId)
+//                            .toList()
+//            );
+//            if (categoriaIds != null && !categoriaIds.isEmpty()) {
+//                categoriasPorTipo.addAll(categoriaIds);
+//            }
+//            categoriaIds = categoriasPorTipo;
+//        }
+//        if (categoriaIds != null && categoriaIds.isEmpty()) {
+//            categoriaIds = null;
+//        }
+//        return productoRepository.filtrarProductos(categoriaIds, marcas, precioMin, precioMax);
+//    }
 
 }

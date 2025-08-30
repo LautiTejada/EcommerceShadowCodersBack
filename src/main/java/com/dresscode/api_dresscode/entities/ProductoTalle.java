@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "talle-producto")
+@Table(name = "talle_producto")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,17 +24,14 @@ import lombok.NoArgsConstructor;
 public class ProductoTalle extends Base {
 
     @ManyToOne
-    @JoinColumn(name = "id-producto", nullable = false)
-    @JsonBackReference
+    @JoinColumn(name = "id_producto", nullable = false)
     private Producto producto;
 
     @ManyToOne
-    @JoinColumn(name = "id-talle", nullable = false)
+    @JoinColumn(name = "id_talle", nullable = false)
     private Talle talle;
 
     @Column(nullable = false)
     @Positive
-    @Max(100)
-    @Builder.Default
-    private Integer cantidad = 0;
+    private Integer cantidad;
 }

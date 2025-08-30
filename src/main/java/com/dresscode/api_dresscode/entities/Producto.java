@@ -1,10 +1,7 @@
 package com.dresscode.api_dresscode.entities;
 
-import com.dresscode.api_dresscode.entities.enums.Color;
-import com.dresscode.api_dresscode.entities.enums.Marca;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -23,7 +20,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Producto extends Base{
 
     @Column(name = "nombre", nullable = false)
@@ -38,29 +37,27 @@ public class Producto extends Base{
     @Column(name = "descripcion", nullable = false)
     private String descripcion;
 
-    @Column(name = "color", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "color_id", nullable = false)
     private Color color;
 
-    @Column(name = "marca", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "marca_id", nullable = false)
     private Marca marca;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
-    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    @JsonManagedReference
-    private List<DescuentoProducto> descuentos = new ArrayList<>();
+    @OneToOne(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private DescuentoProducto productoDescuento;
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    @JsonManagedReference
     private List<ProductoTalle> talles = new ArrayList<>();
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    @JsonManagedReference
     private List<ImagenProducto> imagenes = new ArrayList<>();
 
 }

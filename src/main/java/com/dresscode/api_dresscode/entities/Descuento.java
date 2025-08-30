@@ -1,8 +1,6 @@
 package com.dresscode.api_dresscode.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,17 +22,16 @@ import java.util.List;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 public class Descuento extends Base{
-    @Column(nullable = false, name = "fecha-inicio")
-    private LocalDate fechaInicio;  // Usar LocalDate para fechas
+    @Column(nullable = false, name = "fecha_inicio")
+    private LocalDate fechaInicio;
 
-    @Column(nullable = false, name = "fecha-cierre")
+    @Column(nullable = false, name = "fecha_cierre")
     private LocalDate fechaCierre;
 
-    @Column(nullable = false, name = "porcentaje-descuento")
-    private Integer porcentajeDescuento;
+    @Column(nullable = false, name = "porcentaje_descuento")
+    private Double porcentajeDescuento;
 
     @OneToMany(mappedBy = "descuento", cascade = CascadeType.ALL, orphanRemoval = true)
-
     @Builder.Default
     private List<DescuentoProducto> productos = new ArrayList<>();
 }

@@ -20,17 +20,15 @@ import java.util.List;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 public class Categoria extends Base{
-    @Column(nullable = false, name = "nombre-categoria", unique = true, length = 50)
+    @Column(nullable = false, name = "nombre_categoria", unique = true, length = 50)
     private String nombreCategoria;
 
     @ManyToOne
     @JoinColumn(name = "tipo_id", nullable = false)
-
     private Tipo tipo;
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    @JsonIgnore
     private List<Producto> productos = new ArrayList<>();
 
 }
