@@ -32,6 +32,7 @@ public class Direccion extends Base {
     @Column(name = "localidad", nullable = false)
     private String localidad;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "provincia", nullable = false)
     private Provincias provincia;
 

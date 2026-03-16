@@ -36,7 +36,7 @@ public class DescuentoService extends BaseServiceImpl<Descuento, Long>{
         Descuento descuento = Descuento.builder()
                 .fechaInicio(descuentoDTO.getFechaInicio())
                 .fechaCierre(descuentoDTO.getFechaCierre())
-                .porcentajeDescuento(descuentoDTO.getPorcentajeDescuento())
+                .porcentajeDescuento(descuentoDTO.getPorcentajeDescuento().doubleValue())
                 .build();
 
         return descuentoRepository.save(descuento);
@@ -52,7 +52,7 @@ public class DescuentoService extends BaseServiceImpl<Descuento, Long>{
 
         descuentoExistente.setFechaInicio(datosActualizados.getFechaInicio());
         descuentoExistente.setFechaCierre(datosActualizados.getFechaCierre());
-        descuentoExistente.setPorcentajeDescuento(datosActualizados.getPorcentajeDescuento());
+        descuentoExistente.setPorcentajeDescuento(datosActualizados.getPorcentajeDescuento().doubleValue());
         descuentoExistente.setProductos(descuentoExistente.getProductos());
 
         return descuentoRepository.save(descuentoExistente);

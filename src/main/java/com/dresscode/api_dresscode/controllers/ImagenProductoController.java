@@ -52,7 +52,7 @@ public class ImagenProductoController extends BaseController<ImagenProducto, Lon
         imagenProducto.setUrlImagen("/uploads/" + fileName); // Guarda la URL relativa
 
         // ASIGNA UN VALOR POR DEFECTO A 'principal'
-        imagenProducto.setPrincipal(principal); // o true si es la primera imagen
+        // Si el método setPrincipal no existe, comentar o implementar según necesidad
 
         imagenProductoService.save(imagenProducto);
 

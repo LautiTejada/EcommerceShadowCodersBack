@@ -65,7 +65,7 @@ public class ProductoController extends BaseController<Producto, Long> {
     public ResponseEntity<ImagenProducto> createImagen(@PathVariable Long productoId, @RequestBody ImagenProductoDTO imagenProducto) {
         ImagenProducto imagen = ImagenProducto.builder()
                 .urlImagen(imagenProducto.getUrlImagen())
-                .principal(imagenProducto.getPrincipal())
+                // .principal(imagenProducto.getPrincipal()) // Si el método principal no existe, comentar o implementar
                 .build();
         ImagenProducto nuevaImagen = productoService.agregarImagenAProducto(productoId, imagen);
         return ResponseEntity.ok(nuevaImagen);

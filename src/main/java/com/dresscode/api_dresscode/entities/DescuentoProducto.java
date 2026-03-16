@@ -27,6 +27,11 @@ public class DescuentoProducto extends Base{
     private Producto producto;
 
     @Column(name = "precio_descuento", nullable = false)
-    @Builder.Default
-    private double precioDescuento = producto.getPrecio() * (1 - descuento.getPorcentajeDescuento() / 100);
+    private double precioDescuento;
+
+    public void calcularPrecioDescuento() {
+        if (producto != null && descuento != null) {
+            this.precioDescuento = producto.getPrecio() * (1 - descuento.getPorcentajeDescuento() / 100.0);
+        }
+    }
 }

@@ -29,6 +29,7 @@ public class Usuario extends Base implements UserDetails {
     @Column(nullable = false, name = "password")
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "rol")
     private Rol rol ;
 
