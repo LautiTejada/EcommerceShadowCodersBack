@@ -16,6 +16,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.mercadopago.resources.payment.Payment;
+
 @Service
 @RequiredArgsConstructor
 
@@ -41,6 +43,31 @@ public class OrdenDeCompraService extends BaseServiceImpl<OrdenDeCompra, Long> {
         OrdenDeCompra orden = findById(ordenId);
         orden.setEstadoOrden(nuevoEstado);
         return ordenDeCompraRepository.save(orden);
+    }
+
+    // Actualiza el estado de la orden según el pago de Mercado Pago
+    @Transactional
+    public void actualizarEstadoPorPago(Payment payment) {
+        // Suponiendo que el external_reference es el id de la orden
+        String externalReference = payment.getExternalReference();
+        if (externalReference == null) return;
+        Long ordenId;
+        try {
+            ordenId = Long.parseLong(externalReference);
+        } catch (NumberFormatException e) {
+            return;
+        }
+        var orden = ordenDeCompraRepository.findById(ordenId);
+        if (orden.isEmpty()) return;
+        var estado = switch (payment.getStatus()) {
+            case "approved" -> EstadoOrden.ENTREGADO;
+            case "pending" -> EstadoOrden.EN_PROCESO;
+            case "in_process" -> EstadoOrden.EN_PROCESO;
+            case "rejected" -> EstadoOrden.PEDIDO;
+            default -> EstadoOrden.PEDIDO;
+        };
+        orden.get().setEstadoOrden(estado);
+        ordenDeCompraRepository.save(orden.get());
     }
 
 
