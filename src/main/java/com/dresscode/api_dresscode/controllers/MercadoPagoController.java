@@ -67,11 +67,14 @@ public class MercadoPagoController {
                 .build();
         //el campo installments(1) se refiere a la cantidad máxima de cuotas permitidas para realizar el pago
 
+        // Agregar external_reference para identificar la orden en el webhook
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(items)
                 .backUrls(backUrls)
                 .paymentMethods(paymentMethods)
                 .autoReturn("approved")
+                .externalReference(ordenDeCompra.getId().toString())
+                .notificationUrl("https://tu-dominio.com/api/mercado-pago/webhook")
                 .build();
 
         PreferenceClient client = new PreferenceClient();
