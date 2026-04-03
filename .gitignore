@@ -38,3 +38,5 @@ out/
 
 # Ocultar configuración sensible
 src/main/resources/application.properties
+
+uploads/

@@ -46,8 +46,8 @@ public class DescuentoController extends BaseController<Descuento, Long> {
     @PostMapping("/{descuentoId}/productos/{idProducto}")
     public ResponseEntity<?> agregarProductoADescuento(@PathVariable Long descuentoId, @PathVariable Long idProducto){
         try {
-            descuentoService.agregarProductoADescuento(descuentoId, idProducto);
-            return ResponseEntity.ok().build();
+            Descuento descuento = descuentoService.agregarProductoADescuento(descuentoId, idProducto);
+            return ResponseEntity.ok(descuento);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }

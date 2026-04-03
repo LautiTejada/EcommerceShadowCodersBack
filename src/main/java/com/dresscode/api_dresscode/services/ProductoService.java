@@ -3,11 +3,14 @@ package com.dresscode.api_dresscode.services;
 import com.dresscode.api_dresscode.dtos.ImagenProductoDTO;
 import com.dresscode.api_dresscode.dtos.ProductoDTO;
 import com.dresscode.api_dresscode.entities.Categoria;
+import com.dresscode.api_dresscode.entities.Color;
 import com.dresscode.api_dresscode.entities.ImagenProducto;
 import com.dresscode.api_dresscode.entities.Marca;
 import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.repositories.CategoriaRepository;
+import com.dresscode.api_dresscode.repositories.ColorRepository;
 import com.dresscode.api_dresscode.repositories.ImagenProductoRepository;
+import com.dresscode.api_dresscode.repositories.MarcaRepository;
 import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,6 +28,8 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
     private final ImagenProductoRepository imagenProductoRepository;
+    private final ColorRepository colorRepository;
+    private final MarcaRepository marcaRepository;
 
     @Override
     protected JpaRepository<Producto, Long> getRepository() {
@@ -34,14 +39,19 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
     public Producto createProducto(ProductoDTO producto, Long categoriaId) {
         Categoria categoria = categoriaRepository.findById(categoriaId)
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada con id: " + categoriaId));
+        Color color = colorRepository.findByNombreColor(producto.getColor())
+                .orElseThrow(() -> new RuntimeException("Color no encontrado: " + producto.getColor()));
+        Marca marca = marcaRepository.findByNombreMarca(producto.getMarca())
+                .orElseThrow(() -> new RuntimeException("Marca no encontrada: " + producto.getMarca()));
         Producto nuevoProducto = Producto.builder()
                 .nombre(producto.getNombre())
                 .precio(producto.getPrecio())
                 .descripcion(producto.getDescripcion())
-//                .color(Color.valueOf(producto.getColor().toUpperCase()))
-//                .marca(Marca.valueOf(producto.getMarca().toUpperCase()))
+                .color(color)
+                .marca(marca)
                 .categoria(categoria)
                 .build();
+        nuevoProducto.setActivo(producto.getActivo() != null ? producto.getActivo() : true);
         return productoRepository.save(nuevoProducto);
 
     }
