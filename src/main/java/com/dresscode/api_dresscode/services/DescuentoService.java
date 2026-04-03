@@ -68,12 +68,11 @@ public class DescuentoService extends BaseServiceImpl<Descuento, Long>{
 
 
     @Transactional
-    public void agregarProductoADescuento(Long idDescuento, Long idProducto) {
+    public Descuento agregarProductoADescuento(Long idDescuento, Long idProducto) {
         Descuento descuento = findById(idDescuento);
 
         Producto producto = productoRepository.findById(idProducto)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
 
         boolean yaExiste = descuento.getProductos().stream()
                 .anyMatch(dp -> dp.getProducto().getId().equals(idProducto));
@@ -87,7 +86,7 @@ public class DescuentoService extends BaseServiceImpl<Descuento, Long>{
                 .build();
 
         descuento.getProductos().add(dp);
-        descuentoRepository.save(descuento);
+        return descuentoRepository.save(descuento);
     }
 
     @Transactional

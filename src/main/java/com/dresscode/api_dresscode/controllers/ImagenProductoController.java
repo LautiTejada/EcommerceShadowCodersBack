@@ -32,11 +32,11 @@ public class ImagenProductoController extends BaseController<ImagenProducto, Lon
         return ResponseEntity.ok(imagenes);
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/upload/{productoId}")
     public ResponseEntity<ImagenProducto> uploadImagen(
-            @RequestParam("productoId") Long productoId,
+            @PathVariable Long productoId,
             @RequestParam("image") MultipartFile file,
-            @RequestParam("principal") boolean principal // <-- agrega esto
+            @RequestParam(value = "principal", defaultValue = "false") boolean principal
     ) throws IOException {
 
         // Guardar archivo en disco
@@ -49,10 +49,7 @@ public class ImagenProductoController extends BaseController<ImagenProducto, Lon
         Producto producto = productoService.findById(productoId);
         ImagenProducto imagenProducto = new ImagenProducto();
         imagenProducto.setProducto(producto);
-        imagenProducto.setUrlImagen("/uploads/" + fileName); // Guarda la URL relativa
-
-        // ASIGNA UN VALOR POR DEFECTO A 'principal'
-        // Si el método setPrincipal no existe, comentar o implementar según necesidad
+        imagenProducto.setUrlImagen("/uploads/" + fileName);
 
         imagenProductoService.save(imagenProducto);
 
