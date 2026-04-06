@@ -13,6 +13,7 @@ import com.dresscode.api_dresscode.repositories.ImagenProductoRepository;
 import com.dresscode.api_dresscode.repositories.MarcaRepository;
 import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,7 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
         return productoRepository;
     }
 
+    @CacheEvict(value = "estadisticasDashboard", allEntries = true)
     public Producto createProducto(ProductoDTO producto, Long categoriaId) {
         Categoria categoria = categoriaRepository.findById(categoriaId)
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada con id: " + categoriaId));
@@ -74,6 +76,7 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
 //    }
 
 
+    @CacheEvict(value = "estadisticasDashboard", allEntries = true)
     public Producto cambiarEstadoProducto(Long id, Boolean nuevoEstado) {
         Producto producto = findById(id);
         producto.setActivo(nuevoEstado);
