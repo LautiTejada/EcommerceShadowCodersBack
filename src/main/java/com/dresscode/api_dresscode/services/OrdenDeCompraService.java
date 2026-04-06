@@ -3,11 +3,13 @@ package com.dresscode.api_dresscode.services;
 import com.dresscode.api_dresscode.dtos.OrdenDeCompraDTO;
 import com.dresscode.api_dresscode.entities.*;
 import com.dresscode.api_dresscode.entities.enums.EstadoOrden;
+import com.dresscode.api_dresscode.entities.enums.MetodoPago;
 import com.dresscode.api_dresscode.repositories.DetalleOrdenRepository;
 import com.dresscode.api_dresscode.repositories.DireccionRepository;
 import com.dresscode.api_dresscode.repositories.OrdenDeCompraRepository;
 import com.dresscode.api_dresscode.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,7 @@ public class OrdenDeCompraService extends BaseServiceImpl<OrdenDeCompra, Long> {
 
 
     @Transactional
+    @CacheEvict(value = "estadisticasDashboard", allEntries = true)
     public OrdenDeCompra actualizarEstadoOrden(Long ordenId, EstadoOrden nuevoEstado) {
         OrdenDeCompra orden = findById(ordenId);
         orden.setEstadoOrden(nuevoEstado);
@@ -47,6 +50,7 @@ public class OrdenDeCompraService extends BaseServiceImpl<OrdenDeCompra, Long> {
 
     // Actualiza el estado de la orden según el pago de Mercado Pago
     @Transactional
+    @CacheEvict(value = "estadisticasDashboard", allEntries = true)
     public void actualizarEstadoPorPago(Payment payment) {
         // Suponiendo que el external_reference es el id de la orden
         String externalReference = payment.getExternalReference();
@@ -76,27 +80,43 @@ public class OrdenDeCompraService extends BaseServiceImpl<OrdenDeCompra, Long> {
     }
 
     @Transactional
+    @CacheEvict(value = "estadisticasDashboard", allEntries = true)
     public OrdenDeCompra crearOrdenConDetalles(OrdenDeCompraDTO ordenCompra) {
         Usuario usuario = usuarioRepository.findById(ordenCompra.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        Direccion direccion = direccionRepository.findById(ordenCompra.getDireccionId())
-                .orElseThrow(() -> new RuntimeException("Dirección no encontrada"));
+        // Si no se proporciona dirección, usar la primera dirección activa del usuario
+        Direccion direccion;
+        if (ordenCompra.getDireccionId() != null) {
+            direccion = direccionRepository.findById(ordenCompra.getDireccionId())
+                    .orElseThrow(() -> new RuntimeException("Dirección no encontrada"));
+        } else {
+            direccion = usuario.getDirecciones().stream()
+                    .filter(Direccion::getActivo)
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Usuario sin dirección activa"));
+        }
 
-        // Calcular precio total de los detalles
-        Double precioTotal = ordenCompra.getDetalles().stream()
-                .mapToDouble(detalle -> detalle.getCantidad() * detalle.getPrecioUnitario())
-                .sum();
+        // Calcular precio total de los detalles si no se proporciona
+        Double precioTotal = ordenCompra.getPrecioTotal();
+        if (precioTotal == null || precioTotal == 0) {
+            precioTotal = ordenCompra.getDetalles().stream()
+                    .mapToDouble(detalle -> detalle.getCantidad() * detalle.getPrecioUnitario())
+                    .sum();
+        }
+
+        // Establecer método de pago por defecto si no se proporciona
+        MetodoPago metodoPago = ordenCompra.getMetodoPago() != null ? ordenCompra.getMetodoPago() : MetodoPago.CREDITO;
 
         OrdenDeCompra orden = OrdenDeCompra.builder()
                 .usuario(usuario)
                 .direccion(direccion)
                 .fecha(LocalDate.now())
                 .precioTotal(precioTotal)
-                .metodoPago(ordenCompra.getMetodoPago())
-                .estadoOrden(ordenCompra.getEstadoOrden())
+                .metodoPago(metodoPago)
+                .estadoOrden(ordenCompra.getEstadoOrden() != null ? ordenCompra.getEstadoOrden() : EstadoOrden.PEDIDO)
                 .build();
-
+        orden.setActivo(true);
         ordenDeCompraRepository.save(orden);
 
         List<DetalleOrden> detalles = ordenCompra.getDetalles().stream().map(detalleReq -> {

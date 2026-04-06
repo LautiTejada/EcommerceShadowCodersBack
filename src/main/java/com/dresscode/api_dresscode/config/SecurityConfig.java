@@ -35,6 +35,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/usuarios/**").hasRole("ADMIN") // Solo ADMIN puede acceder a usuarios
                     .requestMatchers("/api/ordenes-de-compra/**", "/api/detalles-orden/**").authenticated()
                     .requestMatchers("/api/producto-talles/**").authenticated()
+                    .requestMatchers("/api/estadisticas/**").hasRole("ADMIN") // Solo ADMIN puede acceder a estadísticas
                     .anyRequest().permitAll()
             )
             .exceptionHandling(exception -> exception.accessDeniedHandler(accessDeniedHandler))
