@@ -112,4 +112,27 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
         direccionRepository.save(direccion);
     }
 
+    /**
+     * Verifica si el usuario autenticado (por username) es el propietario de un usuario específico
+     * @param usuarioId ID del usuario a verificar
+     * @param username Username del usuario autenticado
+     * @return true si el usuario autenticado es el propietario o es ADMIN
+     */
+    public boolean esElMismoUsuario(Long usuarioId, String username) {
+        Usuario usuarioAutenticado = usuarioRepository.findByUsername(username).orElse(null);
+        if (usuarioAutenticado == null) {
+            return false;
+        }
+        return usuarioAutenticado.getId().equals(usuarioId);
+    }
+    /**
+     * Obtiene el ID de un usuario por su username
+     * @param username Username del usuario
+     * @return ID del usuario
+     */
+    public Long obtenerIdPorUsername(String username) {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return usuario.getId();
+    }
 }

@@ -32,9 +32,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(authRequest ->
                 authRequest
                     .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/api/usuarios/**").hasRole("ADMIN") // Solo ADMIN puede acceder a usuarios
+                    .requestMatchers("/api/usuarios/**").authenticated() // Usuarios autenticados, permisos específicos en @PreAuthorize
                     .requestMatchers("/api/ordenes-de-compra/**", "/api/detalles-orden/**").authenticated()
                     .requestMatchers("/api/producto-talles/**").authenticated()
+                    .requestMatchers("/api/favoritos/**").authenticated() // Favoritos solo para autenticados
                     .requestMatchers("/api/estadisticas/**").hasRole("ADMIN") // Solo ADMIN puede acceder a estadísticas
                     .anyRequest().permitAll()
             )
