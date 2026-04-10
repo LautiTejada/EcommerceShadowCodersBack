@@ -29,6 +29,7 @@ public class FavoritoService extends BaseServiceImpl<Favorito, Long> {
 
     /**
      * Agrega un producto a los favoritos del usuario autenticado
+     * Si el favorito fue eliminado anteriormente, lo reactiva
      */
     @Transactional
     public Favorito agregarAFavoritos(Long usuarioId, Long productoId) {
@@ -38,11 +39,23 @@ public class FavoritoService extends BaseServiceImpl<Favorito, Long> {
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        // Verificar si ya existe el favorito
+        // Verificar si ya existe el favorito activo
         if (favoritoRepository.existsByUsuarioAndProductoAndActivoTrue(usuario, producto)) {
             throw new RuntimeException("El producto ya está en favoritos");
         }
 
+        // Buscar si existe pero está inactivo (fue eliminado previamente)
+        var favoritoExistente = favoritoRepository.findByUsuarioAndProducto(usuario, producto);
+        
+        if (favoritoExistente.isPresent()) {
+            // Reactivar el favorito existente
+            Favorito favorito = favoritoExistente.get();
+            favorito.setActivo(true);
+            favorito.setFechaAgregado(LocalDateTime.now());
+            return favoritoRepository.save(favorito);
+        }
+
+        // Crear nuevo favorito
         Favorito favorito = Favorito.builder()
                 .usuario(usuario)
                 .producto(producto)
