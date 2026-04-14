@@ -32,6 +32,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(authRequest ->
                 authRequest
                     .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/api/banners").permitAll() // GET banners es público
+                    .requestMatchers("/api/banners/**").permitAll() // GET banners por ID es público
                     .requestMatchers("/api/usuarios/**").authenticated() // Usuarios autenticados, permisos específicos en @PreAuthorize
                     .requestMatchers("/api/ordenes-de-compra/**", "/api/detalles-orden/**").authenticated()
                     .requestMatchers("/api/producto-talles/**").authenticated()
