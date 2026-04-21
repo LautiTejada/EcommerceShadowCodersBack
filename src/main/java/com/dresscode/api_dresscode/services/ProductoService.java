@@ -37,6 +37,10 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
         return productoRepository;
     }
 
+    public List<Producto> getProductosActivos() {
+        return productoRepository.findByActivoTrue();
+    }
+
     @CacheEvict(value = "estadisticasDashboard", allEntries = true)
     public Producto createProducto(ProductoDTO producto, Long categoriaId) {
         Categoria categoria = categoriaRepository.findById(categoriaId)
