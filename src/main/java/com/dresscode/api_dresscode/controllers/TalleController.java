@@ -23,7 +23,7 @@ public class TalleController extends BaseController<Talle,Long> {
     }
 
     @PostMapping("/{talleId}/productos/{productoId}")
-    public ResponseEntity<String> asignarTalleAProducto (@RequestParam  Long talleId, @RequestParam Long productoId){
+    public ResponseEntity<String> asignarTalleAProducto (@PathVariable Long talleId, @PathVariable Long productoId){
         talleService.asignarTalleAProducto(productoId, talleId);
         return ResponseEntity.ok("Talle asignado "+ talleId+", al producto: "+ productoId);
     }
