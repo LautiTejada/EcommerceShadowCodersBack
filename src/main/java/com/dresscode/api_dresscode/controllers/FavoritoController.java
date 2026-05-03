@@ -1,6 +1,6 @@
 package com.dresscode.api_dresscode.controllers;
 
-import com.dresscode.api_dresscode.entities.Favorito;
+import com.dresscode.api_dresscode.dtos.FavoritoDTO;
 import com.dresscode.api_dresscode.services.FavoritoService;
 import com.dresscode.api_dresscode.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +26,9 @@ public class FavoritoController {
      */
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<Favorito>> misFavoritos() {
+    public ResponseEntity<List<FavoritoDTO>> misFavoritos() {
         Long usuarioId = obtenerIdUsuarioAutenticado();
-        List<Favorito> favoritos = favoritoService.obtenerFavoritosDelUsuario(usuarioId);
+        List<FavoritoDTO> favoritos = favoritoService.obtenerFavoritosDelUsuario(usuarioId);
         return ResponseEntity.ok(favoritos);
     }
 
@@ -37,8 +37,8 @@ public class FavoritoController {
      */
     @GetMapping("/usuario/{usuarioId}")
     @PreAuthorize("hasRole('ADMIN') or @favoritoService.esElMismoUsuario(#usuarioId, authentication.principal.username)")
-    public ResponseEntity<List<Favorito>> favoritosDeUsuario(@PathVariable Long usuarioId) {
-        List<Favorito> favoritos = favoritoService.obtenerFavoritosDelUsuario(usuarioId);
+    public ResponseEntity<List<FavoritoDTO>> favoritosDeUsuario(@PathVariable Long usuarioId) {
+        List<FavoritoDTO> favoritos = favoritoService.obtenerFavoritosDelUsuario(usuarioId);
         return ResponseEntity.ok(favoritos);
     }
 
@@ -58,9 +58,9 @@ public class FavoritoController {
      */
     @PostMapping("/{productoId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Favorito> agregarAFavoritos(@PathVariable Long productoId) {
+    public ResponseEntity<FavoritoDTO> agregarAFavoritos(@PathVariable Long productoId) {
         Long usuarioId = obtenerIdUsuarioAutenticado();
-        Favorito favorito = favoritoService.agregarAFavoritos(usuarioId, productoId);
+        FavoritoDTO favorito = favoritoService.agregarAFavoritos(usuarioId, productoId);
         return ResponseEntity.status(HttpStatus.CREATED).body(favorito);
     }
 

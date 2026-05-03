@@ -1,5 +1,6 @@
 package com.dresscode.api_dresscode.services;
 
+import com.dresscode.api_dresscode.dtos.FavoritoDTO;
 import com.dresscode.api_dresscode.entities.Favorito;
 import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.entities.Usuario;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,12 +29,23 @@ public class FavoritoService extends BaseServiceImpl<Favorito, Long> {
         return favoritoRepository;
     }
 
+    private FavoritoDTO toDTO(Favorito favorito) {
+        return FavoritoDTO.builder()
+                .id(favorito.getId())
+                .usuarioId(favorito.getUsuario().getId())
+                .productoId(favorito.getProducto().getId())
+                .nombreProducto(favorito.getProducto().getNombre())
+                .precioProducto(favorito.getProducto().getPrecio())
+                .fechaAgregado(favorito.getFechaAgregado())
+                .build();
+    }
+
     /**
      * Agrega un producto a los favoritos del usuario autenticado
      * Si el favorito fue eliminado anteriormente, lo reactiva
      */
     @Transactional
-    public Favorito agregarAFavoritos(Long usuarioId, Long productoId) {
+    public FavoritoDTO agregarAFavoritos(Long usuarioId, Long productoId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         
@@ -52,7 +65,7 @@ public class FavoritoService extends BaseServiceImpl<Favorito, Long> {
             Favorito favorito = favoritoExistente.get();
             favorito.setActivo(true);
             favorito.setFechaAgregado(LocalDateTime.now());
-            return favoritoRepository.save(favorito);
+            return toDTO(favoritoRepository.save(favorito));
         }
 
         // Crear nuevo favorito
@@ -63,7 +76,7 @@ public class FavoritoService extends BaseServiceImpl<Favorito, Long> {
                 .build();
         
         favorito.setActivo(true);
-        return favoritoRepository.save(favorito);
+        return toDTO(favoritoRepository.save(favorito));
     }
 
     /**
@@ -87,11 +100,14 @@ public class FavoritoService extends BaseServiceImpl<Favorito, Long> {
     /**
      * Obtiene todos los favoritos activos del usuario
      */
-    public List<Favorito> obtenerFavoritosDelUsuario(Long usuarioId) {
+    public List<FavoritoDTO> obtenerFavoritosDelUsuario(Long usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         
-        return favoritoRepository.findByUsuarioAndActivoTrue(usuario);
+        return favoritoRepository.findByUsuarioAndActivoTrue(usuario)
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     /**
