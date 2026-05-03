@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ordenes-de-compra")
+@RequestMapping("/api/ordenes")
 
 public class OrdenDeCompraController extends BaseController<OrdenDeCompra, Long> {
 
@@ -31,10 +31,22 @@ public class OrdenDeCompraController extends BaseController<OrdenDeCompra, Long>
         return ResponseEntity.ok(ordenActualizada);
     }
 
+    @PatchMapping("/{ordenId}/estado")
+    public ResponseEntity<OrdenDeCompra> cambiarEstadoOrden(@PathVariable Long ordenId, @RequestParam EstadoOrden estado){
+        OrdenDeCompra ordenActualizada = ordenDeCompraService.actualizarEstadoOrden(ordenId, estado);
+        return ResponseEntity.ok(ordenActualizada);
+    }
+
     @GetMapping("/usuario/{idUsuario}")
     public ResponseEntity<List<OrdenDeCompra>> traerOrdenesPorUsuario(@PathVariable Long idUsuario){
         List<OrdenDeCompra> ordenes = ordenDeCompraService.getOrdenesByUsuario(idUsuario);
         return ResponseEntity.ok(ordenes);
+    }
+
+    @PostMapping("/crear")
+    public ResponseEntity<OrdenDeCompra> crearOrden(@RequestBody OrdenDeCompraDTO ordenCompra) {
+        OrdenDeCompra nuevaOrden = ordenDeCompraService.crearOrdenConDetalles(ordenCompra);
+        return ResponseEntity.status(201).body(nuevaOrden);
     }
 
     @PostMapping("/detalle")

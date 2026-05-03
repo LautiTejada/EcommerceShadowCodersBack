@@ -12,6 +12,9 @@ import java.util.List;
 @Repository
 public interface ProductoRepository extends BaseRepository<Producto, Long> {
     List<Producto> findByCategoria(Categoria categoria);
+    List<Producto> findByActivoTrue();
+    long countByActivoTrue();
+
     @Query("SELECT p FROM Producto p WHERE " +
             "(:categoriaIds IS NULL OR p.categoria.id IN :categoriaIds) AND " +
             "(:marcas IS NULL OR p.marca IN :marcas) AND " +

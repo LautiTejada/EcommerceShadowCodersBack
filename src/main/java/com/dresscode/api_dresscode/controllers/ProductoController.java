@@ -35,6 +35,11 @@ public class ProductoController extends BaseController<Producto, Long> {
 //        return ResponseEntity.ok(productos);
 //    }
 
+    @GetMapping("/activos")
+    public ResponseEntity<List<Producto>> getProductosActivos() {
+        return ResponseEntity.ok(productoService.getProductosActivos());
+    }
+
     @PostMapping("/{categoriaId}")
     public ResponseEntity<Producto> crearProducto(@Valid @RequestBody ProductoDTO producto, @PathVariable Long categoriaId){
         Producto nuevoProducto = productoService.createProducto(producto, categoriaId);

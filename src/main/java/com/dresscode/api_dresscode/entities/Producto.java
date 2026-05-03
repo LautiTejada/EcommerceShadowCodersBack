@@ -49,8 +49,9 @@ public class Producto extends Base{
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
-    @OneToOne(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private DescuentoProducto productoDescuento;
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<DescuentoProducto> descuentosProducto = new ArrayList<>();
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
