@@ -12,47 +12,51 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Receives MercadoPago payment notifications (webhooks).
+ *
+ * Signature validation is handled upstream by WebhookSignatureFilter —
+ * by the time a request reaches this controller, it is already authenticated.
+ *
+ * MP calls this endpoint as:
+ *   POST /api/mercado-pago/webhook?id={paymentId}&topic=payment
+ */
 @RestController
 @RequestMapping("/api/mercado-pago")
 @RequiredArgsConstructor
 public class MercadoPagoWebhookController {
-    private final OrdenDeCompraService ordenDeCompraService;
 
+    private final OrdenDeCompraService ordenDeCompraService;
     private static final Logger logger = LoggerFactory.getLogger(MercadoPagoWebhookController.class);
 
     @Value("${mercadopago.access-token}")
     private String mercadoPagoAccessToken;
 
-    @Value("${mercadopago.webhook-secret}")
-    private String webhookSecret;
-
     @PostMapping("/webhook")
-    public ResponseEntity<String> webhook(@RequestParam("id") String paymentId, @RequestParam("topic") String topic, @RequestHeader(value = "X-Webhook-Secret", required = false) String receivedSecret) {
-        // Validar clave secreta
-        if (webhookSecret != null && !webhookSecret.isEmpty()) {
-            if (receivedSecret == null || !webhookSecret.equals(receivedSecret)) {
-                logger.warn("Webhook recibido con clave inválida");
-                return ResponseEntity.status(401).body("Unauthorized: invalid webhook secret");
-            }
-        }
-        MercadoPagoConfig.setAccessToken(mercadoPagoAccessToken);
+    public ResponseEntity<String> webhook(
+            @RequestParam("id") String paymentId,
+            @RequestParam("topic") String topic) {
+
         if (!"payment".equals(topic)) {
-            return ResponseEntity.badRequest().body("Unsupported topic");
+            logger.info("Webhook topic '{}' ignored", topic);
+            return ResponseEntity.ok("Topic ignored");
         }
+
+        MercadoPagoConfig.setAccessToken(mercadoPagoAccessToken);
+
         try {
             Long id = Long.parseLong(paymentId);
             PaymentClient paymentClient = new PaymentClient();
             Payment payment = paymentClient.get(id);
-            String status = payment.getStatus();
             ordenDeCompraService.actualizarEstadoPorPago(payment);
-            logger.info("Webhook procesado correctamente: paymentId={}, status={}", paymentId, status);
-            return ResponseEntity.ok("Webhook procesado: status=" + status);
+            logger.info("Webhook procesado: paymentId={}, status={}", paymentId, payment.getStatus());
+            return ResponseEntity.ok("OK");
         } catch (NumberFormatException e) {
             logger.error("paymentId inválido: {}", paymentId);
             return ResponseEntity.badRequest().body("paymentId inválido");
         } catch (Exception e) {
             logger.error("Error procesando webhook: {}", e.getMessage());
-            return ResponseEntity.status(500).body("Error procesando webhook: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
 }

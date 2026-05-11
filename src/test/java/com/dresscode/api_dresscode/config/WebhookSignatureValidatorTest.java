@@ -10,79 +10,83 @@ import java.util.HexFormat;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * TDD RED: HMAC-SHA256 webhook signature validator — pure unit tests.
+ * Unit tests for WebhookSignatureValidator — MercadoPago HMAC-SHA256 scheme.
  *
- * Spec: Req — Webhook Request Integrity Validation
- *   Scenario: Valid signature accepted
- *   Scenario: Missing signature rejected
- *   Scenario: Invalid (tampered) signature rejected
- *
- * Security note: comparison MUST use MessageDigest.isEqual (timing-safe).
+ * MP signs the manifest: "id:{dataId};request-id:{requestId};ts:{ts}"
+ * and sends the signature as: "ts=<ts>,v1=<hex-hmac>" in the x-signature header.
  */
 class WebhookSignatureValidatorTest {
 
     private static final String SECRET = "test-secret-key";
-
     private final WebhookSignatureValidator validator = new WebhookSignatureValidator(SECRET);
 
     @Test
     void validSignature_returnsTrue() throws Exception {
-        String payload = "{\"id\":123,\"type\":\"payment\"}";
-        String signature = computeHmacSha256(payload, SECRET);
+        String dataId = "123";
+        String requestId = "req-abc";
+        String ts = "1704720092";
+        String manifest = "id:" + dataId + ";request-id:" + requestId + ";ts:" + ts;
+        String hmac = computeHmac(manifest, SECRET);
+        String xSignature = "ts=" + ts + ",v1=" + hmac;
 
-        boolean result = validator.isValid(payload.getBytes(StandardCharsets.UTF_8), signature);
-
-        assertTrue(result, "A correctly computed HMAC-SHA256 signature must be accepted");
+        assertTrue(validator.isValid(dataId, requestId, xSignature),
+                "A correctly computed MP signature must be accepted");
     }
 
     @Test
-    void tamperedPayload_returnsFalse() throws Exception {
-        String originalPayload = "{\"id\":123,\"type\":\"payment\"}";
-        String tamperedPayload = "{\"id\":999,\"type\":\"payment\"}";
-        String signatureForOriginal = computeHmacSha256(originalPayload, SECRET);
+    void tamperedDataId_returnsFalse() throws Exception {
+        String requestId = "req-abc";
+        String ts = "1704720092";
+        String manifest = "id:123;request-id:" + requestId + ";ts:" + ts;
+        String hmac = computeHmac(manifest, SECRET);
+        String xSignature = "ts=" + ts + ",v1=" + hmac;
 
-        boolean result = validator.isValid(tamperedPayload.getBytes(StandardCharsets.UTF_8), signatureForOriginal);
-
-        assertFalse(result, "A signature computed for original payload must NOT validate tampered payload");
+        assertFalse(validator.isValid("999", requestId, xSignature),
+                "A signature for a different id must be rejected");
     }
 
     @Test
     void nullSignature_returnsFalse() {
-        byte[] payload = "{\"id\":123}".getBytes(StandardCharsets.UTF_8);
-
-        boolean result = validator.isValid(payload, null);
-
-        assertFalse(result, "A null signature must be rejected");
+        assertFalse(validator.isValid("123", "req-abc", null),
+                "A null x-signature must be rejected");
     }
 
     @Test
     void blankSignature_returnsFalse() {
-        byte[] payload = "{\"id\":123}".getBytes(StandardCharsets.UTF_8);
-
-        boolean result = validator.isValid(payload, "   ");
-
-        assertFalse(result, "A blank signature must be rejected");
+        assertFalse(validator.isValid("123", "req-abc", "   "),
+                "A blank x-signature must be rejected");
     }
 
     @Test
     void wrongSecret_returnsFalse() throws Exception {
-        String payload = "{\"id\":123,\"type\":\"payment\"}";
-        String signatureWithWrongSecret = computeHmacSha256(payload, "wrong-secret");
+        String dataId = "123";
+        String requestId = "req-abc";
+        String ts = "1704720092";
+        String manifest = "id:" + dataId + ";request-id:" + requestId + ";ts:" + ts;
+        String hmac = computeHmac(manifest, "wrong-secret");
+        String xSignature = "ts=" + ts + ",v1=" + hmac;
 
-        boolean result = validator.isValid(payload.getBytes(StandardCharsets.UTF_8), signatureWithWrongSecret);
-
-        assertFalse(result, "A signature computed with a different secret must be rejected");
+        assertFalse(validator.isValid(dataId, requestId, xSignature),
+                "A signature computed with a different secret must be rejected");
     }
 
-    /**
-     * Helper: computes the expected HMAC-SHA256 hex signature.
-     * This mirrors what the caller would compute.
-     */
-    private static String computeHmacSha256(String payload, String secret) throws Exception {
+    @Test
+    void missingV1Field_returnsFalse() {
+        assertFalse(validator.isValid("123", "req-abc", "ts=1704720092"),
+                "x-signature without v1 field must be rejected");
+    }
+
+    @Test
+    void noSecretConfigured_returnsTrue() {
+        // Dev/CI: blank secret skips validation
+        WebhookSignatureValidator devValidator = new WebhookSignatureValidator("");
+        assertTrue(devValidator.isValid("123", "req-abc", null),
+                "When no secret is configured, validation is skipped and returns true");
+    }
+
+    private static String computeHmac(String manifest, String secret) throws Exception {
         Mac mac = Mac.getInstance("HmacSHA256");
-        SecretKeySpec keySpec = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-        mac.init(keySpec);
-        byte[] hmacBytes = mac.doFinal(payload.getBytes(StandardCharsets.UTF_8));
-        return HexFormat.of().formatHex(hmacBytes);
+        mac.init(new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+        return HexFormat.of().formatHex(mac.doFinal(manifest.getBytes(StandardCharsets.UTF_8)));
     }
 }
