@@ -50,10 +50,18 @@ public class SecurityConfig {
                     .requestMatchers("/auth/**", "/api/auth/**").permitAll()
                     // Webhook — signature validated by WebhookSignatureFilter (not JWT)
                     .requestMatchers("/api/mercado-pago/webhook").permitAll()
+                    // Static files — product images (/uploads/**) and banner assets (/assets/**)
+                    .requestMatchers("/uploads/**", "/assets/**").permitAll()
                     // Public read-only resources
                     .requestMatchers(
                         org.springframework.http.HttpMethod.GET,
-                        "/api/banners", "/api/banners/**"
+                        "/api/banners", "/api/banners/**",
+                        "/api/productos/**",
+                        "/api/categorias/**",
+                        "/api/tipos/**",
+                        "/api/talles/**",
+                        "/api/colores/active",
+                        "/api/marcas/active"
                     ).permitAll()
                     // Swagger / OpenAPI (accessible without auth for API docs)
                     .requestMatchers(

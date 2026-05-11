@@ -42,6 +42,13 @@ public class MarcaController extends BaseController<Marca, Long> {
         return super.changeStatus(id);
     }
 
+    /** PATCH alias — frontend uses PATCH /marcas/{id}/status */
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> changeStatusPatch(@PathVariable Long id) throws Exception {
+        return super.changeStatus(id);
+    }
+
     @Override
     @PutMapping("/{id}/activate")
     @PreAuthorize("hasRole('ADMIN')")

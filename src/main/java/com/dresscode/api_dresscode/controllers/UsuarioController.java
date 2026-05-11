@@ -33,8 +33,8 @@ public class UsuarioController extends BaseController<Usuario, Long>{
     @Override
     @GetMapping("/paged")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getAll(org.springframework.data.domain.Pageable pageable) throws Exception {
-        return super.getAll(pageable);
+    public ResponseEntity<?> getAllPaged(org.springframework.data.domain.Pageable pageable) throws Exception {
+        return super.getAllPaged(pageable);
     }
 
     @Override

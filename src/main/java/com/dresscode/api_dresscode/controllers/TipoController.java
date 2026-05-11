@@ -36,4 +36,11 @@ public class TipoController extends BaseController<Tipo, Long> {
         return ResponseEntity.ok(categorias);
     }
 
+    /** PATCH alias — frontend uses PATCH /tipos/{id}/status */
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> changeStatusPatch(@PathVariable Long id) throws Exception {
+        return super.changeStatus(id);
+    }
+
 }

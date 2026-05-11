@@ -43,5 +43,11 @@ public class CategoriaController extends BaseController<Categoria, Long> {
         return ResponseEntity.noContent().build();
     }
 
+    /** PATCH alias — frontend uses PATCH /categorias/{id}/status */
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> changeStatusPatch(@PathVariable Long id) throws Exception {
+        return super.changeStatus(id);
+    }
 
 }
