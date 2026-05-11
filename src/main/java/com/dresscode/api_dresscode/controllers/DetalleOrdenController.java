@@ -5,6 +5,7 @@ import com.dresscode.api_dresscode.entities.DetalleOrden;
 import com.dresscode.api_dresscode.services.DetalleOrdenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class DetalleOrdenController extends BaseController{
 
 
     @GetMapping("/orden/{ordenId}")
+    @PreAuthorize("hasRole('ADMIN') or isAuthenticated()")
     public ResponseEntity<List<DetalleOrden>> obtenerDetallesPorOrden(@PathVariable Long ordenId){
         List<DetalleOrden> detalles = detalleOrdenService.obtenerDetallesPorOrden(ordenId);
         return ResponseEntity.ok(detalles);
@@ -31,6 +33,7 @@ public class DetalleOrdenController extends BaseController{
     }
 
     @PutMapping("/actualizar-cantidad/{detalleId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DetalleOrden> actualizarDetallerOrden(@PathVariable Long detalleId, @RequestParam Integer nuevaCantidad){
         DetalleOrden detalleActualizado = detalleOrdenService.actualizarDetalleOrden(detalleId,nuevaCantidad);
         return ResponseEntity.status(201).body(detalleActualizado);

@@ -4,11 +4,11 @@ import com.dresscode.api_dresscode.dtos.FavoritoDTO;
 import com.dresscode.api_dresscode.entities.Favorito;
 import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.entities.Usuario;
+import com.dresscode.api_dresscode.repositories.BaseRepository;
 import com.dresscode.api_dresscode.repositories.FavoritoRepository;
 import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import com.dresscode.api_dresscode.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +25,7 @@ public class FavoritoService extends BaseServiceImpl<Favorito, Long> {
     private final ProductoRepository productoRepository;
 
     @Override
-    protected JpaRepository<Favorito, Long> getRepository() {
+    protected BaseRepository<Favorito, Long> getRepository() {
         return favoritoRepository;
     }
 
@@ -103,8 +103,9 @@ public class FavoritoService extends BaseServiceImpl<Favorito, Long> {
     public List<FavoritoDTO> obtenerFavoritosDelUsuario(Long usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        
-        return favoritoRepository.findByUsuarioAndActivoTrue(usuario)
+
+        // Uses JOIN FETCH to avoid N+1: all Productos are loaded in a single query.
+        return favoritoRepository.findActivosByUsuarioWithProducto(usuario)
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());

@@ -2,10 +2,10 @@ package com.dresscode.api_dresscode.services;
 import com.dresscode.api_dresscode.dtos.CatergoriaDtos.CategoriaDTO;
 import com.dresscode.api_dresscode.entities.Categoria;
 import com.dresscode.api_dresscode.entities.Tipo;
+import com.dresscode.api_dresscode.repositories.BaseRepository;
 import com.dresscode.api_dresscode.repositories.CategoriaRepository;
 import com.dresscode.api_dresscode.repositories.TipoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +17,7 @@ public class CategoriaService extends BaseServiceImpl<Categoria, Long> {
     private final TipoRepository tipoRepository;
 
     @Override
-    protected JpaRepository<Categoria, Long> getRepository() {
+    protected BaseRepository<Categoria, Long> getRepository() {
         return categoriaRepository;
     }
 

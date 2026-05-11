@@ -5,6 +5,7 @@ import com.dresscode.api_dresscode.entities.Categoria;
 import com.dresscode.api_dresscode.entities.Tipo;
 import com.dresscode.api_dresscode.services.TipoService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class TipoController extends BaseController<Tipo, Long> {
 
 
     @DeleteMapping("/{tipoId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Tipo> eliminarTipoPorId(@PathVariable Long tipoId){
         tipoService.deleteTipo(tipoId);
         return  ResponseEntity.noContent().build();

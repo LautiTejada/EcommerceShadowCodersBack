@@ -1,12 +1,11 @@
 package com.dresscode.api_dresscode.services;
 
 import com.dresscode.api_dresscode.entities.Direccion;
-import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.entities.Usuario;
+import com.dresscode.api_dresscode.repositories.BaseRepository;
 import com.dresscode.api_dresscode.repositories.DireccionRepository;
 import com.dresscode.api_dresscode.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,7 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    protected JpaRepository<Usuario, Long> getRepository() {return usuarioRepository;}
+    protected BaseRepository<Usuario, Long> getRepository() {return usuarioRepository;}
 
 
 
@@ -49,8 +48,9 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
         String nuevaPassword = usuarioActualizado.getPassword();
         if (nuevaPassword != null && !nuevaPassword.isBlank() &&
                 !nuevaPassword.equals(usuarioExistente.getPassword())) {
-            // Si la nueva contraseña no está hasheada, la hasheamos
-            if (!nuevaPassword.startsWith("$2a$")) {
+            // If the password looks already encoded (starts with {algo} prefix or $2a$ legacy), preserve it.
+            // Otherwise encode it. Using DelegatingPasswordEncoder, new hashes start with {bcrypt}.
+            if (!isAlreadyEncoded(nuevaPassword)) {
                 usuarioExistente.setPassword(passwordEncoder.encode(nuevaPassword));
             } else {
                 usuarioExistente.setPassword(nuevaPassword);
@@ -77,8 +77,12 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
     }
 
     public List<Direccion> obtenerDireccionesDeUsuario(Long usuarioId) {
-        Usuario usuario = findById(usuarioId);
-        return usuario.getDirecciones();
+        // Uses repository query to avoid LazyInitializationException outside a @Transactional boundary.
+        // Do NOT call usuario.getDirecciones() here — the collection is now LAZY.
+        if (!usuarioRepository.existsById(usuarioId)) {
+            throw new RuntimeException("Usuario no encontrado con id: " + usuarioId);
+        }
+        return direccionRepository.findByUsuarioId(usuarioId);
     }
 
 
@@ -126,6 +130,21 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
         return usuarioAutenticado.getId().equals(usuarioId);
     }
     /**
+     * Checks if a password string appears to be already encoded.
+     * Handles both DelegatingPasswordEncoder format ({bcrypt}$2a$...) and
+     * legacy bare bcrypt format ($2a$...).
+     * Pure function — no side effects.
+     */
+    static boolean isAlreadyEncoded(String password) {
+        if (password == null) return false;
+        // DelegatingPasswordEncoder format: {id}hash
+        if (password.startsWith("{") && password.contains("}")) return true;
+        // Legacy bare bcrypt
+        if (password.startsWith("$2a$") || password.startsWith("$2b$") || password.startsWith("$2y$")) return true;
+        return false;
+    }
+
+    /**
      * Obtiene el ID de un usuario por su username
      * @param username Username del usuario
      * @return ID del usuario
@@ -134,5 +153,55 @@ public class UsuarioService extends BaseServiceImpl<Usuario, Long>{
         Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return usuario.getId();
+    }
+
+    /**
+     * Assigns a role to a target user, enforcing privilege ordering.
+     *
+     * Rules:
+     * - Only ADMIN callers may assign roles.
+     * - A caller may only assign roles with strictly lower privilege than their own.
+     * - Privilege order: ADMIN (highest, level 0) > USER (lowest, level 1).
+     * - This means ADMIN may only assign USER (level 1 > level 0), never ADMIN (same level).
+     *
+     * @param targetUserId ID of the user to receive the new role
+     * @param newRole      The role to assign
+     * @param caller       The authenticated user performing the assignment
+     * @throws SecurityException if the caller lacks permission to assign the target role
+     */
+    public void assignRole(Long targetUserId, Usuario.Rol newRole, Usuario caller) {
+        if (caller.getRol() != Usuario.Rol.ADMIN) {
+            throw new SecurityException(
+                    "Solo los administradores pueden asignar roles.");
+        }
+
+        int callerLevel = privilegeLevel(caller.getRol());
+        int targetLevel = privilegeLevel(newRole);
+
+        if (targetLevel <= callerLevel) {
+            // targetLevel must be STRICTLY GREATER than callerLevel (lower privilege)
+            // ADMIN is level 0, USER is level 1. ADMIN may only assign roles with level > 0.
+            throw new SecurityException(
+                    "No podés asignar un rol de igual o mayor privilegio que el tuyo.");
+        }
+
+        Usuario targetUser = findById(targetUserId);
+        targetUser.setRol(newRole);
+        usuarioRepository.save(targetUser);
+    }
+
+    /**
+     * Returns the privilege level of a role.
+     * Lower number = higher privilege.
+     * Pure function — deterministic, no side effects.
+     *
+     * @param rol the role to evaluate
+     * @return privilege level (0 = highest)
+     */
+    static int privilegeLevel(Usuario.Rol rol) {
+        return switch (rol) {
+            case ADMIN -> 0;
+            case USER -> 1;
+        };
     }
 }

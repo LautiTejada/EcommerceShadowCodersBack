@@ -3,11 +3,9 @@ package com.dresscode.api_dresscode.services;
 import com.dresscode.api_dresscode.entities.DetalleOrden;
 import com.dresscode.api_dresscode.entities.OrdenDeCompra;
 import com.dresscode.api_dresscode.entities.Producto;
+import com.dresscode.api_dresscode.repositories.BaseRepository;
 import com.dresscode.api_dresscode.repositories.DetalleOrdenRepository;
-import com.dresscode.api_dresscode.repositories.OrdenDeCompraRepository;
-import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +19,7 @@ public class DetalleOrdenService extends BaseServiceImpl<DetalleOrden, Long>{
     private final DetalleOrdenRepository detalleOrdenRepository;
 
     @Override
-    protected JpaRepository<DetalleOrden, Long> getRepository(){return detalleOrdenRepository;}
+    protected BaseRepository<DetalleOrden, Long> getRepository(){return detalleOrdenRepository;}
 
 
     public List<DetalleOrden> obtenerDetallesPorOrden(Long ordenId) {

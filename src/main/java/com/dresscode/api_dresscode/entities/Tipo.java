@@ -1,6 +1,6 @@
 package com.dresscode.api_dresscode.entities;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,9 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class Tipo extends Base{
 
     @Column(nullable = false, name = "nombre_tipo", unique = true)
@@ -26,5 +23,6 @@ public class Tipo extends Base{
 
     @OneToMany(mappedBy = "tipo", cascade = CascadeType.ALL)
     @Builder.Default
+    @JsonIgnore
     private List<Categoria> categorias = new ArrayList<>();
 }

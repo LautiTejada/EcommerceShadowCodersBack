@@ -3,11 +3,11 @@ package com.dresscode.api_dresscode.services;
 import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.entities.ProductoTalle;
 import com.dresscode.api_dresscode.entities.Talle;
+import com.dresscode.api_dresscode.repositories.BaseRepository;
 import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import com.dresscode.api_dresscode.repositories.ProductoTalleRepository;
 import com.dresscode.api_dresscode.repositories.TalleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +22,7 @@ public class TalleService extends BaseServiceImpl<Talle, Long> {
     private final ProductoTalleRepository productoTalleRepository;
 
     @Override
-    protected JpaRepository<Talle, Long> getRepository() {
+    protected BaseRepository<Talle, Long> getRepository() {
         return talleRepository;
     }
 

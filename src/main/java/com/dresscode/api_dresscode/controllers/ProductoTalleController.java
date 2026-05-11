@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,8 @@ public class ProductoTalleController extends BaseController<ProductoTalle, Long>
     }
 
     @PostMapping("/crear/{productoId}/talle/{talleId}")
-    public ResponseEntity<ProductoTalle> crearProductoTalle(@PathVariable Long productoId, @PathVariable Long talleId, @RequestBody Map<String, Integer> body) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ProductoTalle> crearProductoTalle(@PathVariable Long productoId, @PathVariable Long talleId, @Valid @RequestBody Map<String, Integer> body) {
         Integer cantidad = body.get("cantidad");
         ProductoTalle nuevo = productoTalleService.crearProductoTalle(productoId, talleId, cantidad);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevo);
@@ -38,9 +40,10 @@ public class ProductoTalleController extends BaseController<ProductoTalle, Long>
     }
 
     @PutMapping("/{productoTalleId}/cantidad")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductoTalle> actualizarCantidad(
             @PathVariable Long productoTalleId,
-            @RequestBody Map<String, Integer> body) {
+            @Valid @RequestBody Map<String, Integer> body) {
 
         Integer cantidad = body.get("cantidad");
         ProductoTalle actualizado = productoTalleService.actualizarCantidad(productoTalleId, cantidad);

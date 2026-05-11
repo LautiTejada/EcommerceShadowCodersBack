@@ -5,11 +5,11 @@ import com.dresscode.api_dresscode.entities.Categoria;
 import com.dresscode.api_dresscode.entities.Descuento;
 import com.dresscode.api_dresscode.entities.DescuentoProducto;
 import com.dresscode.api_dresscode.entities.Producto;
+import com.dresscode.api_dresscode.repositories.BaseRepository;
 import com.dresscode.api_dresscode.repositories.DescuentoProductoRepository;
 import com.dresscode.api_dresscode.repositories.DescuentoRepository;
 import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +24,7 @@ public class DescuentoService extends BaseServiceImpl<Descuento, Long>{
     private final ProductoRepository productoRepository;
 
     @Override
-    protected JpaRepository<Descuento, Long> getRepository() {return descuentoRepository;}
+    protected BaseRepository<Descuento, Long> getRepository() {return descuentoRepository;}
 
 
     @Transactional

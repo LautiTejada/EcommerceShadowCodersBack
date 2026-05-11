@@ -4,10 +4,10 @@ import com.dresscode.api_dresscode.dtos.TipoDTO;
 import com.dresscode.api_dresscode.entities.Categoria;
 import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.entities.Tipo;
+import com.dresscode.api_dresscode.repositories.BaseRepository;
 import com.dresscode.api_dresscode.repositories.CategoriaRepository;
 import com.dresscode.api_dresscode.repositories.TipoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +21,7 @@ public class TipoService extends BaseServiceImpl<Tipo, Long>{
     private final CategoriaRepository categoriaRepository;
 
     @Override
-    protected JpaRepository<Tipo, Long> getRepository(){return tipoRepository;}
+    protected BaseRepository<Tipo, Long> getRepository(){return tipoRepository;}
 
 
 
