@@ -4,13 +4,13 @@ import com.dresscode.api_dresscode.dtos.OrdenDeCompraDTO;
 import com.dresscode.api_dresscode.entities.*;
 import com.dresscode.api_dresscode.entities.enums.EstadoOrden;
 import com.dresscode.api_dresscode.entities.enums.MetodoPago;
+import com.dresscode.api_dresscode.repositories.BaseRepository;
 import com.dresscode.api_dresscode.repositories.DetalleOrdenRepository;
 import com.dresscode.api_dresscode.repositories.DireccionRepository;
 import com.dresscode.api_dresscode.repositories.OrdenDeCompraRepository;
 import com.dresscode.api_dresscode.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +34,7 @@ public class OrdenDeCompraService extends BaseServiceImpl<OrdenDeCompra, Long> {
     private final DetalleOrdenRepository detalleOrdenRepository;
 
     @Override
-    protected JpaRepository<OrdenDeCompra, Long> getRepository() {
+    protected BaseRepository<OrdenDeCompra, Long> getRepository() {
         return ordenDeCompraRepository;
     }
 
@@ -86,14 +86,14 @@ public class OrdenDeCompraService extends BaseServiceImpl<OrdenDeCompra, Long> {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         // Si no se proporciona dirección, usar la primera dirección activa del usuario
+        // Uses DB-level WHERE clause via findFirstByUsuarioIdAndActivoTrue — avoids loading all
+        // addresses into memory and filtering in Java (in-memory filter anti-pattern).
         Direccion direccion;
         if (ordenCompra.getDireccionId() != null) {
             direccion = direccionRepository.findById(ordenCompra.getDireccionId())
                     .orElseThrow(() -> new RuntimeException("Dirección no encontrada"));
         } else {
-            direccion = usuario.getDirecciones().stream()
-                    .filter(Direccion::getActivo)
-                    .findFirst()
+            direccion = direccionRepository.findFirstByUsuarioIdAndActivoTrue(ordenCompra.getUsuarioId())
                     .orElseThrow(() -> new RuntimeException("Usuario sin dirección activa"));
         }
 

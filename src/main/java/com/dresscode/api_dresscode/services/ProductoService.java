@@ -7,6 +7,7 @@ import com.dresscode.api_dresscode.entities.Color;
 import com.dresscode.api_dresscode.entities.ImagenProducto;
 import com.dresscode.api_dresscode.entities.Marca;
 import com.dresscode.api_dresscode.entities.Producto;
+import com.dresscode.api_dresscode.repositories.BaseRepository;
 import com.dresscode.api_dresscode.repositories.CategoriaRepository;
 import com.dresscode.api_dresscode.repositories.ColorRepository;
 import com.dresscode.api_dresscode.repositories.ImagenProductoRepository;
@@ -14,7 +15,6 @@ import com.dresscode.api_dresscode.repositories.MarcaRepository;
 import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +33,7 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
     private final MarcaRepository marcaRepository;
 
     @Override
-    protected JpaRepository<Producto, Long> getRepository() {
+    protected BaseRepository<Producto, Long> getRepository() {
         return productoRepository;
     }
 

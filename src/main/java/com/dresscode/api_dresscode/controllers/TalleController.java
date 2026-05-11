@@ -5,6 +5,7 @@ import com.dresscode.api_dresscode.services.TalleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +24,14 @@ public class TalleController extends BaseController<Talle,Long> {
     }
 
     @PostMapping("/{talleId}/productos/{productoId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> asignarTalleAProducto (@PathVariable Long talleId, @PathVariable Long productoId){
         talleService.asignarTalleAProducto(productoId, talleId);
         return ResponseEntity.ok("Talle asignado "+ talleId+", al producto: "+ productoId);
     }
 
     @DeleteMapping("/{talleId}/productos/{productoId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Talle> eliminarTalleDeProducto(@PathVariable Long productoId, @PathVariable Long talleId){
         talleService.eliminarTalleDeProducto(productoId, talleId);
         return ResponseEntity.noContent().build();

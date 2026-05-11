@@ -5,10 +5,10 @@ import com.dresscode.api_dresscode.entities.Banner;
 import com.dresscode.api_dresscode.entities.Marca;
 import com.dresscode.api_dresscode.repositories.BannerRepository;
 import com.dresscode.api_dresscode.repositories.MarcaRepository;
+import com.dresscode.api_dresscode.repositories.BaseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +22,7 @@ public class BannerService extends BaseServiceImpl<Banner, Long> {
     private final MarcaRepository marcaRepository;
 
     @Override
-    protected JpaRepository<Banner, Long> getRepository() {
+    protected BaseRepository<Banner, Long> getRepository() {
         return bannerRepository;
     }
 

@@ -5,6 +5,7 @@ import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.services.ImagenProductoService;
 import com.dresscode.api_dresscode.services.ProductoService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +34,7 @@ public class ImagenProductoController extends BaseController<ImagenProducto, Lon
     }
 
     @PostMapping("/upload/{productoId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ImagenProducto> uploadImagen(
             @PathVariable Long productoId,
             @RequestParam("image") MultipartFile file,

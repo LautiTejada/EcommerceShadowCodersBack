@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ public class EstadisticasController {
     private final EstadisticasAuditService estadisticasAuditService;
 
     @GetMapping("/dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EstadisticasDTO> getDashboard() {
         EstadisticasDTO dto = estadisticasService.obtenerEstadisticas();
         registrarAcceso("dashboard", "/api/estadisticas/dashboard", dto.toString());
@@ -30,6 +32,7 @@ public class EstadisticasController {
     }
 
     @GetMapping("/dashboard/csv")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> downloadDashboardCsv() {
         EstadisticasDTO dto = estadisticasService.obtenerEstadisticas();
         String csv = "metric,value\n" +
@@ -48,6 +51,7 @@ public class EstadisticasController {
     }
 
     @GetMapping("/auditoria")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAuditoria() {
         registrarAcceso("auditoria", "/api/estadisticas/auditoria", "historial");
         return ResponseEntity.ok(estadisticasAuditService.obtenerAuditorias());

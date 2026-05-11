@@ -22,7 +22,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/mercado-pago")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class MercadoPagoController {
     private final OrdenDeCompraService ordenDeCompraService;
 
@@ -30,7 +29,8 @@ public class MercadoPagoController {
     private String mercadoPagoAccessToken;
 
     @PostMapping("/mp")
-    public ResponseEntity<String> mp(@RequestBody OrdenDeCompraDTO ordenDeCompraDTO) throws Exception {
+    @org.springframework.security.access.prepost.PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> mp(@jakarta.validation.Valid @RequestBody OrdenDeCompraDTO ordenDeCompraDTO) throws Exception {
         MercadoPagoConfig.setAccessToken(mercadoPagoAccessToken);
         List<PreferenceItemRequest> items = new ArrayList<>();
 

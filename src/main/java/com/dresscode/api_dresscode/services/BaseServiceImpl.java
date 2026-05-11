@@ -1,11 +1,10 @@
 package com.dresscode.api_dresscode.services;
 
 import com.dresscode.api_dresscode.entities.Base;
-import com.dresscode.api_dresscode.entities.Producto;
+import com.dresscode.api_dresscode.repositories.BaseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -15,7 +14,7 @@ import java.util.List;
 @Transactional
 public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> implements BaseService<E, ID> {
 
-    protected abstract JpaRepository<E, ID> getRepository();
+    protected abstract BaseRepository<E, ID> getRepository();
 
     @Override
     public List<E> findAll() {
@@ -29,9 +28,8 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
 
     @Override
     public List<E> findAllActive() {
-        return getRepository().findAll().stream()
-                .filter(Base::getActivo)
-                .toList();
+        // Delegates to the JPQL WHERE clause in BaseRepository — no in-memory filtering
+        return getRepository().findAllActive();
     }
 
     @Override

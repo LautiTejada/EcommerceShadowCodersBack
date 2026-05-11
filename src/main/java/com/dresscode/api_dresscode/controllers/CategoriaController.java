@@ -6,6 +6,7 @@ import com.dresscode.api_dresscode.services.CategoriaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,7 @@ public class CategoriaController extends BaseController<Categoria, Long> {
     }
 
     @PostMapping("/{tipoId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Categoria> crearCategoria(@Valid @RequestBody CategoriaDTO categoria, @PathVariable Long tipoId){
         Categoria nuevaCategoria = categoriaService.createCategoria(categoria, tipoId);
         return ResponseEntity.status(201).body(nuevaCategoria);
@@ -28,12 +30,14 @@ public class CategoriaController extends BaseController<Categoria, Long> {
 
 
     @PutMapping("/{categoriaId}/edit/{tipoId}")
-    public ResponseEntity<Categoria> editarCategoria(@PathVariable Long categoriaId, @RequestBody CategoriaDTO categoria, @PathVariable Long tipoId){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Categoria> editarCategoria(@PathVariable Long categoriaId, @Valid @RequestBody CategoriaDTO categoria, @PathVariable Long tipoId){
         Categoria categoriaActualizada = categoriaService.updateCategoria(categoriaId, categoria, tipoId);
         return ResponseEntity.status(HttpStatus.OK).body(categoriaActualizada);
     }
 
     @DeleteMapping("/{categoriaId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Categoria> eliminarCategoria(@PathVariable Long categoriaId){
         categoriaService.delete(categoriaId);
         return ResponseEntity.noContent().build();

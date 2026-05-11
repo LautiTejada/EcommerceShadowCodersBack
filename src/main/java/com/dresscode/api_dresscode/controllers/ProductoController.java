@@ -7,6 +7,7 @@ import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.services.ProductoService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,25 +23,29 @@ public class ProductoController extends BaseController<Producto, Long> {
         this.productoService = productoService;
     }
 
-
-//    @GetMapping("/filtrar")
-//    public ResponseEntity<List<Producto>> filtrarProductos(
-//            @RequestParam(required = false) List<Long> tipoIds,
-//            @RequestParam(required = false) List<Long> categoriaIds,
-//            @RequestParam(required = false) List<Marca> marcas,
-//            @RequestParam(required = false) Integer precioMin,
-//            @RequestParam(required = false) Integer precioMax
-//    ) {
-//        List<Producto> productos = productoService.filtrarProductos(tipoIds, categoriaIds, marcas, precioMin, precioMax);
-//        return ResponseEntity.ok(productos);
-//    }
-
-    @GetMapping("/activos")
-    public ResponseEntity<List<Producto>> getProductosActivos() {
+    /** Devuelve solo productos activos (uso público / frontend). */
+    @Override
+    @GetMapping
+    public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(productoService.getProductosActivos());
     }
 
+    /** Devuelve solo productos activos (alias heredado — mismo comportamiento). */
+    @Override
+    @GetMapping("/active")
+    public ResponseEntity<?> getAllActive() {
+        return ResponseEntity.ok(productoService.getProductosActivos());
+    }
+
+    /** Devuelve TODOS los productos (activos + inactivos) — solo para el panel admin. */
+    @GetMapping("/admin/todos")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Producto>> getTodosLosProductos() {
+        return ResponseEntity.ok(productoService.findAll());
+    }
+
     @PostMapping("/{categoriaId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Producto> crearProducto(@Valid @RequestBody ProductoDTO producto, @PathVariable Long categoriaId){
         Producto nuevoProducto = productoService.createProducto(producto, categoriaId);
         return ResponseEntity.status(201).body(nuevoProducto);
@@ -55,6 +60,7 @@ public class ProductoController extends BaseController<Producto, Long> {
 
 
     @PutMapping("/{productoId}/cambiar-etado")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Producto> cambiarEstadoProducto(@PathVariable Long productoId, @RequestParam Boolean nuevoEstado){
         Producto productoActualizado = productoService.cambiarEstadoProducto(productoId, nuevoEstado);
         return ResponseEntity.ok(productoActualizado);
@@ -67,7 +73,8 @@ public class ProductoController extends BaseController<Producto, Long> {
     }
 
     @PostMapping("/imagen/{productoId}")
-    public ResponseEntity<ImagenProducto> createImagen(@PathVariable Long productoId, @RequestBody ImagenProductoDTO imagenProducto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ImagenProducto> createImagen(@PathVariable Long productoId, @Valid @RequestBody ImagenProductoDTO imagenProducto) {
         ImagenProducto imagen = ImagenProducto.builder()
                 .urlImagen(imagenProducto.getUrlImagen())
                 // .principal(imagenProducto.getPrincipal()) // Si el método principal no existe, comentar o implementar
@@ -77,12 +84,14 @@ public class ProductoController extends BaseController<Producto, Long> {
     }
 
     @PutMapping("/imagen/{imagenId}")
-    public ResponseEntity<ImagenProducto> editarImagen(@PathVariable Long imagenId, @RequestBody ImagenProductoDTO imagenProductoDTO) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ImagenProducto> editarImagen(@PathVariable Long imagenId, @Valid @RequestBody ImagenProductoDTO imagenProductoDTO) {
         ImagenProducto imagenActualizada = productoService.editarImagenProducto(imagenId, imagenProductoDTO);
         return ResponseEntity.ok(imagenActualizada);
     }
 
     @DeleteMapping("/imagen/{imagenId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Producto> eliminarImagen(@PathVariable Long imagenId) {
         Producto producto = productoService.eliminarImagenProducto(imagenId);
         return ResponseEntity.ok(producto);
