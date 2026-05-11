@@ -12,9 +12,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/estadisticas")
@@ -48,6 +51,22 @@ public class EstadisticasController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=estadisticas_dashboard.csv")
                 .contentType(new MediaType("text", "csv", StandardCharsets.UTF_8))
                 .body(csv);
+    }
+
+    @GetMapping("/ventas-por-mes")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Map<String, Object>>> getVentasPorMes(
+            @RequestParam(defaultValue = "6") int meses) {
+        List<Map<String, Object>> data = estadisticasService.ventasPorMes(meses);
+        return ResponseEntity.ok(data);
+    }
+
+    @GetMapping("/top-productos")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Map<String, Object>>> getTopProductos(
+            @RequestParam(defaultValue = "5") int limit) {
+        List<Map<String, Object>> data = estadisticasService.topProductos(limit);
+        return ResponseEntity.ok(data);
     }
 
     @GetMapping("/auditoria")

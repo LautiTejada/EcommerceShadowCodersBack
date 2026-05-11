@@ -28,6 +28,12 @@ public class MercadoPagoController {
     @Value("${mercadopago.access-token}")
     private String mercadoPagoAccessToken;
 
+    @Value("${app.frontend-url:http://localhost:5173}")
+    private String frontendUrl;
+
+    @Value("${app.backend-url:http://localhost:8080}")
+    private String backendUrl;
+
     @PostMapping("/mp")
     @org.springframework.security.access.prepost.PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> mp(@jakarta.validation.Valid @RequestBody OrdenDeCompraDTO ordenDeCompraDTO) throws Exception {
@@ -52,9 +58,9 @@ public class MercadoPagoController {
         }
         PreferenceBackUrlsRequest backUrls =
                 PreferenceBackUrlsRequest.builder()
-                        .success("https://www.seu-site/success")
-                        .pending("https://www.seu-site/pending")
-                        .failure("https://www.seu-site/failure")
+                        .success(frontendUrl + "/checkout/success")
+                        .pending(frontendUrl + "/checkout/pending")
+                        .failure(frontendUrl + "/checkout/failure")
                         .build();
 
         List<PreferencePaymentTypeRequest> excludedPaymentTypes = new ArrayList<>();
@@ -74,7 +80,7 @@ public class MercadoPagoController {
                 .paymentMethods(paymentMethods)
                 .autoReturn("approved")
                 .externalReference(ordenDeCompra.getId().toString())
-                .notificationUrl("https://tu-dominio.com/api/mercado-pago/webhook")
+                .notificationUrl(backendUrl + "/api/mercado-pago/webhook")
                 .build();
 
         PreferenceClient client = new PreferenceClient();
