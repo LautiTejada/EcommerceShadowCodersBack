@@ -1,0 +1,7 @@
+# Script para definir variables de entorno necesarias para el backend
+$env:DB_USERNAME = "postgres"
+$env:DB_PASSWORD = "River091218$"
+$env:JWT_SECRET = "404E635266556A586E3272357538782F413FU428472B4B6250645367566B5970"
+$env:MP_ACCESS_TOKEN = "TEST-18276177729317970-061111-ddf3ee467a2ad76f0191a3077eae7d14-4U42022194"
+$env:MP_WEBHOOK_SECRET = "705a57e529bd594c21fe2364cb6a5d6c4a8421648764f3012b4b51a7fe53111297"
+Write-Host "Variables de entorno definidas."
