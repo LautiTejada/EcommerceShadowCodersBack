@@ -151,7 +151,8 @@ class FavoritoServiceTest {
         favorito.setActivo(true);
 
         when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
-        when(favoritoRepository.findByUsuarioAndActivoTrue(usuario)).thenReturn(List.of(favorito));
+        // Updated: uses findActivosByUsuarioWithProducto (JOIN FETCH) instead of findByUsuarioAndActivoTrue
+        when(favoritoRepository.findActivosByUsuarioWithProducto(usuario)).thenReturn(List.of(favorito));
 
         List<FavoritoDTO> resultado = favoritoService.obtenerFavoritosDelUsuario(1L);
 
