@@ -6,6 +6,7 @@ import com.dresscode.api_dresscode.entities.ImagenProducto;
 import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.services.ProductoService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,35 @@ public class ProductoController extends BaseController<Producto, Long> {
     @GetMapping("/active")
     public ResponseEntity<?> getAllActive() {
         return ResponseEntity.ok(productoService.getProductosActivos());
+    }
+
+    /** Alias para compatibilidad con el frontend (/activos → igual que /active). */
+    @GetMapping("/activos")
+    public ResponseEntity<?> getActivos() {
+        return ResponseEntity.ok(productoService.getProductosActivos());
+    }
+
+    /**
+     * Paged active-only products.
+     * Overrides BaseController#getAllPaged(Pageable) to:
+     *   1. Return ONLY active products (the base returns all, including inactive).
+     *   2. Accept sortBy/sortDir params (frontend convention) instead of Spring's sort=field,dir.
+     */
+    @Override
+    @GetMapping("/paged")
+    public ResponseEntity<?> getAllPaged(org.springframework.data.domain.Pageable pageable) throws Exception {
+        int page = pageable.getPageNumber();
+        int size = pageable.getPageSize();
+
+        jakarta.servlet.http.HttpServletRequest request =
+                ((org.springframework.web.context.request.ServletRequestAttributes)
+                        org.springframework.web.context.request.RequestContextHolder.currentRequestAttributes())
+                        .getRequest();
+        String sortBy  = request.getParameter("sortBy")  != null ? request.getParameter("sortBy")  : "id";
+        String sortDir = request.getParameter("sortDir") != null ? request.getParameter("sortDir") : "asc";
+
+        Page<Producto> result = productoService.getProductosActivosPaged(page, size, sortBy, sortDir);
+        return ResponseEntity.ok(result);
     }
 
     /** Devuelve TODOS los productos (activos + inactivos) — solo para el panel admin. */

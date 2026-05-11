@@ -15,6 +15,10 @@ import com.dresscode.api_dresscode.repositories.MarcaRepository;
 import com.dresscode.api_dresscode.repositories.ProductoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +43,19 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
 
     public List<Producto> getProductosActivos() {
         return productoRepository.findByActivoTrue();
+    }
+
+    /**
+     * Paginated active-only products.
+     * Accepts sortBy/sortDir as plain strings (frontend convention) and builds
+     * the Spring Sort internally so callers don't depend on Spring's sort param format.
+     */
+    public Page<Producto> getProductosActivosPaged(int page, int size, String sortBy, String sortDir) {
+        Sort sort = "desc".equalsIgnoreCase(sortDir)
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return productoRepository.findByActivoTrue(pageable);
     }
 
     @CacheEvict(value = "estadisticasDashboard", allEntries = true)

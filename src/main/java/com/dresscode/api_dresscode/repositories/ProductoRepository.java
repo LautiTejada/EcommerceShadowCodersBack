@@ -4,6 +4,8 @@ import com.dresscode.api_dresscode.entities.Categoria;
 import com.dresscode.api_dresscode.entities.Marca;
 import com.dresscode.api_dresscode.entities.Producto;
 import com.dresscode.api_dresscode.projections.ProductoSummaryProjection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,6 +16,7 @@ import java.util.List;
 public interface ProductoRepository extends BaseRepository<Producto, Long> {
     List<Producto> findByCategoria(Categoria categoria);
     List<Producto> findByActivoTrue();
+    Page<Producto> findByActivoTrue(Pageable pageable);
     long countByActivoTrue();
 
     /**
