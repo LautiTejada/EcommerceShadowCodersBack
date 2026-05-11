@@ -37,4 +37,11 @@ public class TalleController extends BaseController<Talle,Long> {
         return ResponseEntity.noContent().build();
     }
 
+    /** PATCH alias — frontend uses PATCH /talles/{id}/status */
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> changeStatusPatch(@PathVariable Long id) throws Exception {
+        return super.changeStatus(id);
+    }
+
 }

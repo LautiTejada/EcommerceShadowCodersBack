@@ -23,7 +23,7 @@ public abstract class BaseController<E extends Base, ID extends Serializable> {
     }
 
     @GetMapping("/paged")
-    public ResponseEntity<?> getAll(Pageable pageable) throws Exception {
+    public ResponseEntity<?> getAllPaged(Pageable pageable) throws Exception {
         return ResponseEntity.ok(service.findAll(pageable));
     }
 
