@@ -60,8 +60,8 @@ public class SecurityConfig {
                         "/api/categorias/**",
                         "/api/tipos/**",
                         "/api/talles/**",
-                        "/api/colores/active",
-                        "/api/marcas/active"
+                        "/api/colores", "/api/colores/**",
+                        "/api/marcas", "/api/marcas/**"
                     ).permitAll()
                     // Swagger / OpenAPI (accessible without auth for API docs)
                     .requestMatchers(
