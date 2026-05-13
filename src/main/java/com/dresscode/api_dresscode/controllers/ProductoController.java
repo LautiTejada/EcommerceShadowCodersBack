@@ -45,10 +45,11 @@ public class ProductoController extends BaseController<Producto, Long> {
     }
 
     /**
-     * Paged active-only products.
+     * Paged active-only products with optional filters.
      * Overrides BaseController#getAllPaged(Pageable) to:
      *   1. Return ONLY active products (the base returns all, including inactive).
      *   2. Accept sortBy/sortDir params (frontend convention) instead of Spring's sort=field,dir.
+     *   3. Accept tipoIds and categoriaIds for view-level filtering (calzados, ropa, etc).
      */
     @Override
     @GetMapping("/paged")
@@ -63,7 +64,23 @@ public class ProductoController extends BaseController<Producto, Long> {
         String sortBy  = request.getParameter("sortBy")  != null ? request.getParameter("sortBy")  : "id";
         String sortDir = request.getParameter("sortDir") != null ? request.getParameter("sortDir") : "asc";
 
-        Page<Producto> result = productoService.getProductosActivosPaged(page, size, sortBy, sortDir);
+        // Parse optional filter arrays (multi-value params: tipoIds=1&tipoIds=2)
+        String[] tipoIdParams  = request.getParameterValues("tipoIds");
+        String[] catIdParams   = request.getParameterValues("categoriaIds");
+        String[] marcaIdParams = request.getParameterValues("marcaIds");
+
+        List<Long> tipoIds = tipoIdParams != null
+                ? java.util.Arrays.stream(tipoIdParams).map(Long::parseLong).collect(java.util.stream.Collectors.toList())
+                : null;
+        List<Long> categoriaIds = catIdParams != null
+                ? java.util.Arrays.stream(catIdParams).map(Long::parseLong).collect(java.util.stream.Collectors.toList())
+                : null;
+        List<Long> marcaIds = marcaIdParams != null
+                ? java.util.Arrays.stream(marcaIdParams).map(Long::parseLong).collect(java.util.stream.Collectors.toList())
+                : null;
+
+        Page<Producto> result = productoService.getProductosActivosPagedFiltrados(
+                page, size, sortBy, sortDir, tipoIds, categoriaIds, marcaIds);
         return ResponseEntity.ok(result);
     }
 
@@ -82,11 +99,12 @@ public class ProductoController extends BaseController<Producto, Long> {
     }
 
 
-//    @PutMapping("/{productoId}/editar")
-//    public ResponseEntity<Producto> editarProducto(@PathVariable Long productoId, @Valid @RequestBody ProductoDTO producto) {
-//        Producto nuevoProducto = productoService.updateProducto(productoId, producto);
-//        return ResponseEntity.ok(nuevoProducto);
-//    }
+    @PutMapping("/{productoId}/editar")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Producto> editarProducto(@PathVariable Long productoId, @RequestBody ProductoDTO producto) {
+        Producto actualizado = productoService.updateProducto(productoId, producto);
+        return ResponseEntity.ok(actualizado);
+    }
 
 
     @PutMapping("/{productoId}/cambiar-etado")

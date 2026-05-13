@@ -58,6 +58,20 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
         return productoRepository.findByActivoTrue(pageable);
     }
 
+    /**
+     * Paginated active products with optional tipo, categoria and marca filters.
+     * Passing null or empty lists means "no filter" for that dimension.
+     */
+    public Page<Producto> getProductosActivosPagedFiltrados(
+            int page, int size, String sortBy, String sortDir,
+            List<Long> tipoIds, List<Long> categoriaIds, List<Long> marcaIds) {
+        Sort sort = "desc".equalsIgnoreCase(sortDir)
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return productoRepository.findActivosFiltrados(tipoIds, categoriaIds, marcaIds, pageable);
+    }
+
     @CacheEvict(value = "estadisticasDashboard", allEntries = true)
     public Producto createProducto(ProductoDTO producto, Long categoriaId) {
         Categoria categoria = categoriaRepository.findById(categoriaId)
@@ -79,22 +93,30 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
 
     }
 
-//    public Producto updateProducto(Long id, ProductoDTO productoActualizado) {
-//        Producto productoExistente = findById(id);
-//
-//        productoExistente.setNombre(productoActualizado.getNombre());
-//        productoExistente.setPrecio(productoActualizado.getPrecio());
-//        productoExistente.setDescripcion(productoActualizado.getDescripcion());
-//        productoExistente.setColor(Color.valueOf(productoActualizado.getColor().toUpperCase()));
-//        productoExistente.setMarca(Marca.valueOf(productoActualizado.getMarca().toUpperCase()));
-//        productoExistente.setActivo(productoActualizado.getActivo());
-//
-//        // Mantener descuentos y talles previos
-//        productoExistente.setDescuentos(productoExistente.getDescuentos());
-//        productoExistente.setTalles(productoExistente.getTalles());
-//
-//        return productoRepository.save(productoExistente);
-//    }
+    @CacheEvict(value = "estadisticasDashboard", allEntries = true)
+    public Producto updateProducto(Long id, ProductoDTO dto) {
+        Producto producto = findById(id);
+        if (dto.getNombre() != null)      producto.setNombre(dto.getNombre());
+        if (dto.getPrecio() != null)      producto.setPrecio(dto.getPrecio());
+        if (dto.getDescripcion() != null) producto.setDescripcion(dto.getDescripcion());
+        if (dto.getActivo() != null)      producto.setActivo(dto.getActivo());
+        if (dto.getColor() != null) {
+            Color color = colorRepository.findByNombreColor(dto.getColor())
+                    .orElseThrow(() -> new RuntimeException("Color no encontrado: " + dto.getColor()));
+            producto.setColor(color);
+        }
+        if (dto.getMarca() != null) {
+            Marca marca = marcaRepository.findByNombreMarca(dto.getMarca())
+                    .orElseThrow(() -> new RuntimeException("Marca no encontrada: " + dto.getMarca()));
+            producto.setMarca(marca);
+        }
+        if (dto.getCategoriaId() != null) {
+            Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
+                    .orElseThrow(() -> new RuntimeException("Categoría no encontrada: " + dto.getCategoriaId()));
+            producto.setCategoria(categoria);
+        }
+        return productoRepository.save(producto);
+    }
 
 
     @CacheEvict(value = "estadisticasDashboard", allEntries = true)
@@ -141,23 +163,5 @@ public class ProductoService extends BaseServiceImpl<Producto, Long> {
         return producto.getImagenes();
     }
 
-//    public List<Producto> filtrarProductos(List<Long> tipoIds, List<Long> categoriaIds, Marca marcas, Integer precioMin, Integer precioMax) {
-//        if (tipoIds != null && !tipoIds.isEmpty()) {
-//            List<Long> categoriasPorTipo = new java.util.ArrayList<>(
-//                    categoriaRepository.findByTipoIdIn(tipoIds)
-//                            .stream()
-//                            .map(Categoria::getId)
-//                            .toList()
-//            );
-//            if (categoriaIds != null && !categoriaIds.isEmpty()) {
-//                categoriasPorTipo.addAll(categoriaIds);
-//            }
-//            categoriaIds = categoriasPorTipo;
-//        }
-//        if (categoriaIds != null && categoriaIds.isEmpty()) {
-//            categoriaIds = null;
-//        }
-//        return productoRepository.filtrarProductos(categoriaIds, marcas, precioMin, precioMax);
-//    }
 
 }

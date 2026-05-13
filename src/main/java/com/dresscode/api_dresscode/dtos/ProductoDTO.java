@@ -7,7 +7,8 @@ public class ProductoDTO {
     private String nombre;
     private Double precio;
     private String descripcion;
-    private String color; // tipo String para mapear después al enum
+    private String color;
     private String marca;
     private Boolean activo;
+    private Long categoriaId;
 }

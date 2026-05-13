@@ -39,4 +39,19 @@ public interface ProductoRepository extends BaseRepository<Producto, Long> {
             @Param("precioMin") Integer precioMin,
             @Param("precioMax") Integer precioMax
     );
+
+    /**
+     * Unified paginated filter. Each dimension is optional:
+     * pass null or empty list to skip that filter.
+     */
+    @Query("SELECT p FROM Producto p WHERE p.activo = true " +
+           "AND (:#{#tipoIds == null || #tipoIds.isEmpty()} = true OR p.categoria.tipo.id IN :tipoIds) " +
+           "AND (:#{#categoriaIds == null || #categoriaIds.isEmpty()} = true OR p.categoria.id IN :categoriaIds) " +
+           "AND (:#{#marcaIds == null || #marcaIds.isEmpty()} = true OR p.marca.id IN :marcaIds)")
+    Page<Producto> findActivosFiltrados(
+            @Param("tipoIds") List<Long> tipoIds,
+            @Param("categoriaIds") List<Long> categoriaIds,
+            @Param("marcaIds") List<Long> marcaIds,
+            Pageable pageable
+    );
 }
