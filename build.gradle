@@ -28,12 +28,18 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+<<<<<<< HEAD
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly('io.jsonwebtoken:jjwt-jackson:0.11.5') // para usar JSON con Jackson
 	implementation 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
+=======
+	testRuntimeOnly 'com.h2database:h2'
+	implementation 'org.hibernate.orm:hibernate-envers:6.4.4.Final'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+>>>>>>> b47e225 (chore: update configuration and dependencies)
 }
 
 tasks.named('test') {
