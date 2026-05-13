@@ -32,6 +32,7 @@ public class OrdenDeCompraService extends BaseServiceImpl<OrdenDeCompra, Long> {
     private final DireccionService direccionService;
     private final ProductoTalleService productoTalleService;
     private final DetalleOrdenRepository detalleOrdenRepository;
+    private final EmailService emailService;
 
     @Override
     protected BaseRepository<OrdenDeCompra, Long> getRepository() {
@@ -45,7 +46,10 @@ public class OrdenDeCompraService extends BaseServiceImpl<OrdenDeCompra, Long> {
     public OrdenDeCompra actualizarEstadoOrden(Long ordenId, EstadoOrden nuevoEstado) {
         OrdenDeCompra orden = findById(ordenId);
         orden.setEstadoOrden(nuevoEstado);
-        return ordenDeCompraRepository.save(orden);
+        OrdenDeCompra guardada = ordenDeCompraRepository.save(orden);
+        // TODO: habilitar cuando tengamos email configurado
+        // emailService.enviarCambioEstadoOrden(guardada);
+        return guardada;
     }
 
     // Actualiza el estado de la orden según el pago de Mercado Pago
@@ -70,8 +74,11 @@ public class OrdenDeCompraService extends BaseServiceImpl<OrdenDeCompra, Long> {
             case "rejected" -> EstadoOrden.PEDIDO;
             default -> EstadoOrden.PEDIDO;
         };
-        orden.get().setEstadoOrden(estado);
-        ordenDeCompraRepository.save(orden.get());
+        OrdenDeCompra o = orden.get();
+        o.setEstadoOrden(estado);
+        OrdenDeCompra guardada = ordenDeCompraRepository.save(o);
+        // TODO: habilitar cuando tengamos email configurado
+        // emailService.enviarCambioEstadoOrden(guardada);
     }
 
 
@@ -134,6 +141,8 @@ public class OrdenDeCompraService extends BaseServiceImpl<OrdenDeCompra, Long> {
         detalleOrdenRepository.saveAll(detalles);
         orden.setDetalles(detalles);
 
+        // TODO: habilitar cuando tengamos email configurado
+        // emailService.enviarConfirmacionOrden(orden);
         return orden;
     }
 

@@ -23,6 +23,14 @@ public class OrdenDeCompraController extends BaseController<OrdenDeCompra, Long>
         this.ordenDeCompraService = ordenDeCompraService;
     }
 
+    /** Sobrescribe el getAll del base para restringirlo a ADMIN. */
+    @Override
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getAll() throws Exception {
+        return super.getAll();
+    }
+
     @PutMapping("/{ordenId}/actualizar-estado")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrdenDeCompra> actualizarEstadoOrden(
