@@ -1,5 +1,6 @@
 package com.dresscode.api_dresscode.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class Usuario extends Base implements UserDetails {
     @Column(nullable = false, name = "email", unique = true, length = 50)
     private String email;
 
+    @JsonIgnore
     @Column(nullable = false, name = "password")
     private String password;
 
