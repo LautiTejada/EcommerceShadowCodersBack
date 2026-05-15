@@ -1,0 +1,58 @@
+package com.dresscode.api_dresscode.entities;
+
+import com.dresscode.api_dresscode.entities.enums.EstadoOrden;
+import com.dresscode.api_dresscode.entities.enums.MetodoPago;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "ordenes_de_compra")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
+public class OrdenDeCompra extends Base{
+
+    @ManyToOne
+    @JoinColumn(name = "id-usuario", nullable = false)
+    private Usuario usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "id-direccion", nullable = false)
+    private Direccion direccion;
+
+    @Column(name = "fecha", nullable = false)
+    private LocalDate fecha;
+
+    @Column(name = "precio_total", nullable = false)
+    private Double precioTotal;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "metodo-pago", nullable = false)
+    private MetodoPago metodoPago;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false)
+    private EstadoOrden estadoOrden;
+
+    @OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    @Builder.Default
+    private List<DetalleOrden> detalles = new ArrayList<>();
+
+
+}
